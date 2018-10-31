@@ -62,9 +62,9 @@
   </distributionManagement>
 
   <scm>
-    <url>https://github.com/skltp-incubator/takdatahandler.git</url>
-    <connection>scm:git:https://github.com:443/skltp-incubator/takdatahandler.git</connection>
-    <developerConnection>scm:git:https://github.com:443/skltp-incubator/takdatahandler.git
+    <url>https://github.com/skltp/takdatahandler.git</url>
+    <connection>scm:git:https://github.com/skltp/takdatahandler.git</connection>
+    <developerConnection>scm:git:https://github.com/skltp/takdatahandler.git
     </developerConnection>
     <tag>HEAD</tag>
   </scm>
