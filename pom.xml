@@ -69,6 +69,14 @@
     <tag>HEAD</tag>
   </scm>
 
+  <repositories>
+    <repository>
+      <id>Inera-snapshots</id>
+      <url>https://nexus.inera.se/repository/maven-public/</url>
+      <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+  </repositories>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -108,7 +116,7 @@
 
   <profiles>
     <profile>
-      <id>test-coverage</id>
+        <id>test-coverage</id>
       <build>
         <plugins>
           <plugin>

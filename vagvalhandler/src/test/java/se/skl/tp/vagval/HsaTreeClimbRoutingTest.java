@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_2;
 import static se.skl.tp.vagval.util.TestTakDataDefines.AUTHORIZED_RECEIVER_IN_HSA_TREE;
 import static se.skl.tp.vagval.util.TestTakDataDefines.CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE;
@@ -50,7 +51,7 @@ public class HsaTreeClimbRoutingTest {
   @Test
   public void testRoutingShouldBeFoundOnChildInHsaTree() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_2, RIV21));
+    list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
     Mockito.when(takCache.getRoutingInfo(anyString(), eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))
         .thenReturn(list);
@@ -70,7 +71,7 @@ public class HsaTreeClimbRoutingTest {
   @Test
   public void testTraceLoggingWhenRoutingFoundOnChildInHsaTree() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_2, RIV21));
+    list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
     Mockito.when(takCache.getRoutingInfo(anyString(), eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))
         .thenReturn(list);
@@ -90,7 +91,7 @@ public class HsaTreeClimbRoutingTest {
   @Test
   public void testRoutingShouldNotBeFoundOnParentInHsaTree() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_2, RIV21));
+    list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
     Mockito.when(takCache.getRoutingInfo(anyString(), eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))
         .thenReturn(list);
@@ -104,5 +105,6 @@ public class HsaTreeClimbRoutingTest {
         .getRoutingInfo(NAMNRYMD_1, PARENT_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);
     assertTrue(routingInfoList.isEmpty());
   }
+
 
 }

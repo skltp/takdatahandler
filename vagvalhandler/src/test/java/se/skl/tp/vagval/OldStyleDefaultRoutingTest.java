@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_2;
 import static se.skl.tp.vagval.util.TestTakDataDefines.NAMNRYMD_1;
 import static se.skl.tp.vagval.util.TestTakDataDefines.RECEIVER_1_DEFAULT_RECEIVER_2;
@@ -46,7 +47,7 @@ public class OldStyleDefaultRoutingTest {
   @Test
   public void testRoutingByOldStyleDefaultRouting() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_2, RIV21));
+    list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
     Mockito.when(takCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
     Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
@@ -72,7 +73,7 @@ public class OldStyleDefaultRoutingTest {
   @Test
   public void testTraceLoggingWhenRoutingByOldStyleDefaultRouting() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_2, RIV21));
+    list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
     Mockito.when(takCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
     Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
@@ -100,7 +101,7 @@ public class OldStyleDefaultRoutingTest {
   @Test
   public void testIsNotAuthorizedByOldStyleDefaultRoutingWhenItsDisabled() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_2, RIV21));
+    list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
     Mockito.when(takCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
     Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))

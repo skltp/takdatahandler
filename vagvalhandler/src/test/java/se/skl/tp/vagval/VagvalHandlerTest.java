@@ -2,6 +2,7 @@ package se.skl.tp.vagval;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_1;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_2;
 import static se.skl.tp.vagval.util.TestTakDataDefines.NAMNRYMD_1;
@@ -44,7 +45,7 @@ public class VagvalHandlerTest {
   @Test
   public void testOneRoutingInfoFound() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_1, RIV20));
+    list.add(createRoutingInfo(ADDRESS_1, RIV20));
     Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
 
     vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingDelimiter);
@@ -58,7 +59,7 @@ public class VagvalHandlerTest {
   @Test
   public void testTraceLoggingOneRoutingInfoFound() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_1, RIV20));
+    list.add(createRoutingInfo(ADDRESS_1, RIV20));
     Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
 
     vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingDelimiter);
@@ -72,8 +73,8 @@ public class VagvalHandlerTest {
   @Test
   public void testTwoRoutingInfoFound() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
-    list.add(new RoutingInfo(ADDRESS_1, RIV20));
-    list.add(new RoutingInfo(ADDRESS_2, RIV21));
+    list.add(createRoutingInfo(ADDRESS_1, RIV20));
+    list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
     Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
 
