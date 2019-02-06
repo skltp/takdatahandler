@@ -3,7 +3,7 @@
   <parent>
     <artifactId>tak-data-handler</artifactId>
     <groupId>se.skltp.takdatahandler</groupId>
-    <version>1.0.0-RC2-SNAPSHOT</version>
+    <version>1.0.0-RC2</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -12,7 +12,7 @@
     <dependency>
       <groupId>se.skltp.takdatahandler</groupId>
       <artifactId>common</artifactId>
-      <version>1.0.0-RC2-SNAPSHOT</version>
+      <version>1.0.0-RC2</version>
       <scope>compile</scope>
     </dependency>
 
