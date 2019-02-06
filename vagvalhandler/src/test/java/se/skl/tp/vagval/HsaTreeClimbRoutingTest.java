@@ -22,6 +22,8 @@ import org.mockito.AdditionalMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import se.skl.tp.DefaultRoutingConfiguration;
+import se.skl.tp.DefaultRoutingConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
@@ -29,14 +31,15 @@ import se.skltp.takcache.RoutingInfo;
 import se.skltp.takcache.TakCache;
 
 public class HsaTreeClimbRoutingTest {
-  private String defaultRoutingDelimiter = "#";
-
   HsaCache hsaCache;
 
   @Mock
   TakCache takCache;
 
   VagvalHandlerImpl vagvalHandler;
+
+  DefaultRoutingConfiguration defaultRoutingConfiguration;
+
 
   @Before
   public void beforeTest() {
@@ -46,6 +49,8 @@ public class HsaTreeClimbRoutingTest {
     URL url = getClass().getClassLoader().getResource("hsacache.xml");
     URL urlHsaRoot = getClass().getClassLoader().getResource("hsacachecomplementary.xml");
     hsaCache.init(url.getFile(), urlHsaRoot.getFile());
+    defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
+    defaultRoutingConfiguration.setDelimiter("#");
   }
 
   @Test
@@ -59,7 +64,7 @@ public class HsaTreeClimbRoutingTest {
         .getRoutingInfo(anyString(), AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingDelimiter);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);
@@ -79,7 +84,7 @@ public class HsaTreeClimbRoutingTest {
         .getRoutingInfo(anyString(), AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingDelimiter);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);
@@ -99,7 +104,7 @@ public class HsaTreeClimbRoutingTest {
         .getRoutingInfo(anyString(), AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingDelimiter);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, PARENT_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);

@@ -4,8 +4,9 @@ import static se.skl.tp.hsa.cache.HsaCache.DEFAUL_ROOTNODE;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import se.skl.tp.DefaultRoutingConfiguration;
+import se.skl.tp.DefaultRoutingConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.vagval.logging.LogTraceAppender;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
@@ -20,19 +21,23 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
 
   private HsaCache hsaCache;
   private TakCache takCache;
-  private final String oldStyleDefaultRoutingAddressDelimiter;
 
+  DefaultRoutingConfiguration defaultRoutingConfiguration;
 
   @Autowired
-  public BehorighetHandlerImpl(HsaCache hsaCache, TakCache takCache, @Value("${vagvalrouter.default.routing.address.delimiter}") String delimiter) {
+  public BehorighetHandlerImpl(HsaCache hsaCache, TakCache takCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
     this.hsaCache = hsaCache;
     this.takCache = takCache;
+    this.defaultRoutingConfiguration = defaultRoutingConfiguration;
+  }
 
-    oldStyleDefaultRoutingAddressDelimiter = delimiter;
+  public BehorighetHandlerImpl(HsaCache hsaCache, TakCache takCache) {
+    this(hsaCache, takCache, new DefaultRoutingConfigurationImpl());
   }
 
   public boolean isAuthorized(String senderId, String servicecontractNamespace, String receiverId) {
     LogTraceAppender logTrace = new LogTraceAppender();
+
 
     boolean isAuthorized = isAuthorized(senderId, servicecontractNamespace, receiverId, logTrace);
 
@@ -45,8 +50,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
   public boolean isAuthorized(String senderId, String servicecontractNamespace, String receiverId,
       LogTraceAppender logTrace) {
 
-    if (DefaultRoutingUtil.useOldStyleDefaultRouting(receiverId,
-        oldStyleDefaultRoutingAddressDelimiter)) {
+    if (DefaultRoutingUtil.useOldStyleDefaultRouting(receiverId,defaultRoutingConfiguration.getDelimiter())) {
       return isAuthorizedUsingDefaultRouting(senderId, servicecontractNamespace, receiverId,
           logTrace);
     }
@@ -67,15 +71,29 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
   private boolean isAuthorizedUsingDefaultRouting(String senderId, String servicecontractNamespace,
       String receiverId, LogTraceAppender logTrace) {
     logTrace.append("(leaf)");
+
     List<String> receiverAddresses = DefaultRoutingUtil
-        .extractReceiverAdresses(receiverId, oldStyleDefaultRoutingAddressDelimiter);
-    for (String receiverAddressTmp : receiverAddresses) {
-      logTrace.append(receiverAddressTmp, ',');
-      if (takCache.isAuthorized(senderId, servicecontractNamespace, receiverAddressTmp)) {
-        return true;
+        .extractReceiverAdresses(receiverId, defaultRoutingConfiguration.getDelimiter());
+
+    if(isParametersValidForDefaultRouting(receiverAddresses, senderId, servicecontractNamespace)){
+      for (String receiverAddressTmp : receiverAddresses) {
+        logTrace.append(receiverAddressTmp, ',');
+        if (takCache.isAuthorized(senderId, servicecontractNamespace, receiverAddressTmp)) {
+          return true;
+        }
       }
+    } else{
+      logTrace.append("Invalid parameters");
     }
+
+
     return false;
+  }
+
+  private boolean isParametersValidForDefaultRouting(List<String> receiverAddresses, String senderId, String servicecontractNamespace) {
+    return receiverAddresses.size()==2
+        && DefaultRoutingUtil.isParameterAllowed(servicecontractNamespace, defaultRoutingConfiguration.getAllowedContracts())
+        && DefaultRoutingUtil.isParameterAllowed(senderId, defaultRoutingConfiguration.getAllowedSenderIds());
   }
 
   private boolean isAuthorizedByClimbingHsaTree(String senderId, String servicecontractNamespace,

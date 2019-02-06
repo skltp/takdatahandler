@@ -22,6 +22,8 @@ import org.mockito.AdditionalMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import se.skl.tp.DefaultRoutingConfiguration;
+import se.skl.tp.DefaultRoutingConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
@@ -29,19 +31,20 @@ import se.skltp.takcache.RoutingInfo;
 import se.skltp.takcache.TakCache;
 
 public class OldStyleDefaultRoutingTest {
-  private String defaultRoutingDelimiter = "#";
-
   HsaCache hsaCache;
 
   @Mock
   TakCache takCache;
 
   VagvalHandlerImpl vagvalHandler;
+  DefaultRoutingConfiguration defaultRoutingConfiguration;
 
   @Before
   public void beforeTest() {
     MockitoAnnotations.initMocks(this);
     hsaCache = new HsaCacheImpl();
+    defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
+    defaultRoutingConfiguration.setDelimiter("#");
   }
 
   @Test
@@ -53,7 +56,7 @@ public class OldStyleDefaultRoutingTest {
     Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingDelimiter);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration );
 
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
@@ -79,7 +82,7 @@ public class OldStyleDefaultRoutingTest {
     Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingDelimiter);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration );
 
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
@@ -107,7 +110,9 @@ public class OldStyleDefaultRoutingTest {
     Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, "");
+    DefaultRoutingConfiguration defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
+    defaultRoutingConfiguration.setDelimiter("");
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
     assertTrue(routingInfoList.isEmpty());

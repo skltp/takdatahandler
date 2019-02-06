@@ -8,22 +8,28 @@ import static org.mockito.Matchers.eq;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.AUTHORIZED_RECEIVER_IN_HSA_TREE;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.NAMNRYMD_1;
+import static se.skl.tp.behorighet.util.TestTakDataDefines.NAMNRYMD_2;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.PARENT_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_1;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_1_DEFAULT_RECEIVER_2;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_2;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_2_DEFAULT_RECEIVER_3;
+import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_2_RECEIVER_3_RECIEVER_4;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_3_DEFAULT_RECEIVER_4;
+import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_4_RECEIVER_3_RECIEVER_2;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.SENDER_1;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.SENDER_2;
 
 import java.net.URL;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.AdditionalMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import se.skl.tp.DefaultRoutingConfiguration;
+import se.skl.tp.DefaultRoutingConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
@@ -41,6 +47,7 @@ public class BehorighetHandlerTest {
   TakCache takCache;
 
   BehorighetHandlerImpl behorighetHandler;
+  DefaultRoutingConfiguration defaultRoutingConfiguration;
 
   @Before
   public void beforeTest() {
@@ -49,6 +56,8 @@ public class BehorighetHandlerTest {
     URL url = getClass().getClassLoader().getResource("hsacache.xml");
     URL urlHsaRoot = getClass().getClassLoader().getResource("hsacachecomplementary.xml");
     hsaCache.init(url.getFile(), urlHsaRoot.getFile());
+    defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
+    defaultRoutingConfiguration.setDelimiter(DEFAULT_ROUTING_DELIMITER);
   }
 
   @Test
@@ -57,7 +66,7 @@ public class BehorighetHandlerTest {
     Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1)).thenReturn(true);
     Mockito.when(takCache.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1)).thenReturn(false);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, DEFAULT_ROUTING_DELIMITER);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1));
     assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1));
@@ -69,7 +78,7 @@ public class BehorighetHandlerTest {
     Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1)).thenReturn(true);
     Mockito.when(takCache.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1)).thenReturn(false);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, DEFAULT_ROUTING_DELIMITER);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1));
     assertEquals(RECEIVER_1,
@@ -81,7 +90,7 @@ public class BehorighetHandlerTest {
 
     Mockito.when(takCache.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1)).thenReturn(false);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, DEFAULT_ROUTING_DELIMITER);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1));
     assertEquals("receiver-1,(parent)SE,(default)*",
@@ -96,7 +105,7 @@ public class BehorighetHandlerTest {
     Mockito.when(takCache.isAuthorized(anyString(), anyString(),
         AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))).thenReturn(false);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, DEFAULT_ROUTING_DELIMITER);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     assertTrue(
         behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, AUTHORIZED_RECEIVER_IN_HSA_TREE));
@@ -114,7 +123,7 @@ public class BehorighetHandlerTest {
     Mockito.when(takCache.isAuthorized(anyString(), anyString(),
         AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))).thenReturn(false);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, DEFAULT_ROUTING_DELIMITER);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     assertTrue(behorighetHandler
         .isAuthorized(SENDER_1, NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
@@ -129,12 +138,72 @@ public class BehorighetHandlerTest {
         takCache.isAuthorized(anyString(), anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(false);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, DEFAULT_ROUTING_DELIMITER);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2));
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2_DEFAULT_RECEIVER_3));
     assertFalse(
         behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_3_DEFAULT_RECEIVER_4));
+  }
+
+  @Test
+  public void testIsAuthorizedByOldStyleDefaultRoutingAndForSenderAndContract() throws Exception {
+    Mockito.when(takCache.isAuthorized(anyString(), anyString(), eq(RECEIVER_2))).thenReturn(true);
+    Mockito.when(
+        takCache.isAuthorized(anyString(), anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
+        .thenReturn(false);
+
+    defaultRoutingConfiguration.setAllowedContracts(Arrays.asList(NAMNRYMD_1));
+    defaultRoutingConfiguration.setAllowedSenderIds(Arrays.asList(SENDER_1));
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+
+    assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2));
+    assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2_DEFAULT_RECEIVER_3));
+    assertFalse(
+        behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_3_DEFAULT_RECEIVER_4));
+  }
+
+
+  @Test
+  public void testOldStyleDefaultRoutingNotAllowedContract() throws Exception {
+    Mockito.when(takCache.isAuthorized(anyString(), anyString(), eq(RECEIVER_2))).thenReturn(true);
+    Mockito.when(
+        takCache.isAuthorized(anyString(), anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
+        .thenReturn(false);
+
+    defaultRoutingConfiguration.setAllowedContracts(Arrays.asList(NAMNRYMD_1));
+    defaultRoutingConfiguration.setAllowedSenderIds(Arrays.asList(SENDER_1));
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+
+    assertFalse(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_2, RECEIVER_1_DEFAULT_RECEIVER_2));
+    assertFalse(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_2, RECEIVER_2_DEFAULT_RECEIVER_3));
+  }
+
+  @Test
+  public void testOldStyleDefaultRoutingNotAllowedSenders() throws Exception {
+    Mockito.when(takCache.isAuthorized(anyString(), anyString(), eq(RECEIVER_2))).thenReturn(true);
+    Mockito.when(
+        takCache.isAuthorized(anyString(), anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
+        .thenReturn(false);
+
+    defaultRoutingConfiguration.setAllowedContracts(Arrays.asList(NAMNRYMD_1));
+    defaultRoutingConfiguration.setAllowedSenderIds(Arrays.asList(SENDER_1));
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+
+    assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2));
+    assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_2_DEFAULT_RECEIVER_3));
+  }
+  @Test
+  public void testOldStyleDefaulRoutingtMultipleSeperatorsNotAllowed() throws Exception {
+    Mockito.when(takCache.isAuthorized(anyString(), anyString(), eq(RECEIVER_2))).thenReturn(true);
+    Mockito.when(
+        takCache.isAuthorized(anyString(), anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
+        .thenReturn(false);
+
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+
+    assertFalse(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2_RECEIVER_3_RECIEVER_4));
+    assertFalse(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_4_RECEIVER_3_RECIEVER_2));
   }
 
   @Test
@@ -144,7 +213,7 @@ public class BehorighetHandlerTest {
         takCache.isAuthorized(anyString(), anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(false);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, DEFAULT_ROUTING_DELIMITER);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2));
     assertEquals("(leaf)receiver-2",
@@ -168,7 +237,8 @@ public class BehorighetHandlerTest {
         takCache.isAuthorized(anyString(), anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(false);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, "");
+    defaultRoutingConfiguration.setDelimiter("");
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
 
     assertFalse(
         behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2));

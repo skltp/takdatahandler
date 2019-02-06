@@ -4,9 +4,12 @@ import static se.skl.tp.hsa.cache.HsaCache.DEFAUL_ROOTNODE;
 
 import java.util.Collections;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import se.skl.tp.DefaultRoutingConfiguration;
+import se.skl.tp.DefaultRoutingConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.vagval.logging.LogTraceAppender;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
@@ -21,13 +24,17 @@ public class VagvalHandlerImpl implements VagvalHandler {
 
   private HsaCache hsaCache;
   private TakCache takCache;
-  private final String oldStyleDefaultRoutingAddressDelimiter;
+  DefaultRoutingConfiguration defaultRoutingConfiguration;
 
   @Autowired
-  public VagvalHandlerImpl(HsaCache hsaCache, TakCache takCache, @Value("${vagvalrouter.default.routing.address.delimiter}") String delimiter) {
+  public VagvalHandlerImpl(HsaCache hsaCache, TakCache takCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
     this.hsaCache = hsaCache;
     this.takCache = takCache;
-    oldStyleDefaultRoutingAddressDelimiter = delimiter;
+    this.defaultRoutingConfiguration = defaultRoutingConfiguration;
+  }
+
+  public VagvalHandlerImpl(HsaCache hsaCache, TakCache takCache) {
+    this( hsaCache, takCache, new DefaultRoutingConfigurationImpl());
   }
 
   public List<RoutingInfo> getRoutingInfo(String tjanstegranssnitt, String receiverAddress){
@@ -46,7 +53,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
       LogTraceAppender logTrace) {
 
     if( DefaultRoutingUtil.useOldStyleDefaultRouting(receiverAddress,
-        oldStyleDefaultRoutingAddressDelimiter) ){
+        defaultRoutingConfiguration.getDelimiter()) ){
       return getRoutingInfoUseOldStyleDefaultRouting(tjanstegranssnitt, receiverAddress, logTrace);
     }
 
@@ -86,7 +93,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
     logTrace.append("(leaf)");
 
     List<String> receiverAddresses = DefaultRoutingUtil.extractReceiverAdresses(receiverAddress,
-        oldStyleDefaultRoutingAddressDelimiter);
+        defaultRoutingConfiguration.getDelimiter());
 
     for(String receiverAddressTmp : receiverAddresses){
       logTrace.append(receiverAddressTmp,',');

@@ -31,4 +31,9 @@ public class DefaultRoutingUtil {
     }
     return receiverAddresses;
   }
+
+  public static boolean isParameterAllowed(String parameter, List<String> allowedParameters){
+    return allowedParameters==null || allowedParameters.isEmpty() || allowedParameters.contains(parameter);
+  }
+
 }
