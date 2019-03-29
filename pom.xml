@@ -19,7 +19,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <hsacache.version>1.0.3</hsacache.version>
-    <takcache.version>1.0.0-RC1</takcache.version>
+    <takcache.version>1.0.0</takcache.version>
     <junit.version>4.12</junit.version>
     <mockito.version>1.9.5</mockito.version>
 
