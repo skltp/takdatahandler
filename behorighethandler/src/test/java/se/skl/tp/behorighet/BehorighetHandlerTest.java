@@ -11,6 +11,7 @@ import static se.skl.tp.behorighet.util.TestTakDataDefines.NAMNRYMD_1;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.NAMNRYMD_2;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.PARENT_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_1;
+import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_1_DEFAULT_RECEIVER_1;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_1_DEFAULT_RECEIVER_2;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_2;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_2_DEFAULT_RECEIVER_3;
@@ -147,6 +148,18 @@ public class BehorighetHandlerTest {
   }
 
   @Test
+  public void testIsAuthorizedByOldStyleDefaultRoutingWhenVEEqualsVG() throws Exception {
+    Mockito.when(takCache.isAuthorized(anyString(), anyString(), eq(RECEIVER_1))).thenReturn(true);
+    Mockito.when(
+        takCache.isAuthorized(anyString(), anyString(), AdditionalMatchers.not(eq(RECEIVER_1))))
+        .thenReturn(false);
+
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_1));
+  }
+
+
+  @Test
   public void testIsAuthorizedByOldStyleDefaultRoutingAndForSenderAndContract() throws Exception {
     Mockito.when(takCache.isAuthorized(anyString(), anyString(), eq(RECEIVER_2))).thenReturn(true);
     Mockito.when(
@@ -193,6 +206,7 @@ public class BehorighetHandlerTest {
     assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2));
     assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_2_DEFAULT_RECEIVER_3));
   }
+
   @Test
   public void testOldStyleDefaulRoutingtMultipleSeperatorsNotAllowed() throws Exception {
     Mockito.when(takCache.isAuthorized(anyString(), anyString(), eq(RECEIVER_2))).thenReturn(true);

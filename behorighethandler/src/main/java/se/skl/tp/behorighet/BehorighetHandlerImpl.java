@@ -91,7 +91,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
   }
 
   private boolean isParametersValidForDefaultRouting(List<String> receiverAddresses, String senderId, String servicecontractNamespace) {
-    return receiverAddresses.size()==2
+    return receiverAddresses.size()<=2
         && DefaultRoutingUtil.isParameterAllowed(servicecontractNamespace, defaultRoutingConfiguration.getAllowedContracts())
         && DefaultRoutingUtil.isParameterAllowed(senderId, defaultRoutingConfiguration.getAllowedSenderIds());
   }
