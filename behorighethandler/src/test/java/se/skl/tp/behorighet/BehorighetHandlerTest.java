@@ -74,6 +74,18 @@ public class BehorighetHandlerTest {
   }
 
   @Test
+  public void testSimpleAuthorizonNoHsaCache() throws Exception {
+
+    Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1)).thenReturn(true);
+    Mockito.when(takCache.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1)).thenReturn(false);
+
+    behorighetHandler = new BehorighetHandlerImpl(takCache);
+
+    assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1));
+    assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1));
+  }
+
+  @Test
   public void testTraceLogForSimpleAuthorizon() throws Exception {
 
     Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1)).thenReturn(true);

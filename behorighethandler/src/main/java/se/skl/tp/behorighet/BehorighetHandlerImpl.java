@@ -35,6 +35,10 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
     this(hsaCache, takCache, new DefaultRoutingConfigurationImpl());
   }
 
+  public BehorighetHandlerImpl(TakCache takCache) {
+    this(null, takCache, new DefaultRoutingConfigurationImpl());
+  }
+
   public boolean isAuthorized(String senderId, String servicecontractNamespace, String receiverId) {
     LogTraceAppender logTrace = new LogTraceAppender();
 
@@ -60,7 +64,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
       return true;
     }
 
-    if (isAuthorizedByClimbingHsaTree(senderId, servicecontractNamespace, receiverId, logTrace)) {
+    if (hsaCache != null && isAuthorizedByClimbingHsaTree(senderId, servicecontractNamespace, receiverId, logTrace)) {
       return true;
     }
 

@@ -37,6 +37,10 @@ public class VagvalHandlerImpl implements VagvalHandler {
     this( hsaCache, takCache, new DefaultRoutingConfigurationImpl());
   }
 
+  public VagvalHandlerImpl(TakCache takCache) {
+    this( null, takCache, new DefaultRoutingConfigurationImpl());
+  }
+
   public List<RoutingInfo> getRoutingInfo(String tjanstegranssnitt, String receiverAddress){
 
     List<RoutingInfo> routingInfos;
@@ -63,9 +67,11 @@ public class VagvalHandlerImpl implements VagvalHandler {
       return routingInfos;
     }
 
-    routingInfos = getRoutingInfoByClimbingHsaTree(tjanstegranssnitt, receiverAddress, logTrace);
-    if (!routingInfos.isEmpty()) {
-      return routingInfos;
+    if(hsaCache != null) {
+      routingInfos = getRoutingInfoByClimbingHsaTree(tjanstegranssnitt, receiverAddress, logTrace);
+      if (!routingInfos.isEmpty()) {
+        return routingInfos;
+      }
     }
 
     logTrace.append("(default)",DEFAULT_RECEIVER_ADDRESS);

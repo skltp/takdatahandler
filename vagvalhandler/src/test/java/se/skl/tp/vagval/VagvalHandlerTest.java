@@ -60,6 +60,20 @@ public class VagvalHandlerTest {
   }
 
   @Test
+  public void testOneRoutingInfoNoHsaCache() throws Exception {
+    List<RoutingInfo> list = new ArrayList<>();
+    list.add(createRoutingInfo(ADDRESS_1, RIV20));
+    Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
+
+    vagvalHandler = new VagvalHandlerImpl(takCache);
+
+    List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
+    assertEquals(1, routingInfoList.size());
+    assertEquals(ADDRESS_1, routingInfoList.get(0).getAddress());
+    assertEquals(RIV20, routingInfoList.get(0).getRivProfile());
+  }
+
+  @Test
   public void testTraceLoggingOneRoutingInfoFound() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_1, RIV20));
