@@ -22,6 +22,7 @@ import se.skl.tp.DefaultRoutingConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
+import se.skltp.takcache.BehorigheterCache;
 import se.skltp.takcache.TakCache;
 
 public class BehorighetDefaultRouteTest {
@@ -32,7 +33,7 @@ public class BehorighetDefaultRouteTest {
   HsaCache hsaCache;
 
   @Mock
-  TakCache takCache;
+  BehorigheterCache behorighetCache;
 
   BehorighetHandlerImpl behorighetHandler;
   DefaultRoutingConfiguration defaultRoutingConfiguration;
@@ -52,30 +53,30 @@ public class BehorighetDefaultRouteTest {
   @Test
   public void testSimpleAuthorizonByDefaultRoute() throws Exception {
 
-    Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1)).thenReturn(false);
-    Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
+    Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1)).thenReturn(false);
+    Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorighetCache, defaultRoutingConfiguration);
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1));
   }
 
   @Test
   public void testDefaultRouteShouldOnlyAuthorizeOnCorrectSenderAndNamnrymd() throws Exception {
 
-    Mockito.when(takCache.isAuthorized(SENDER_2, NAMNRYMD_2, RECEIVER_1)).thenReturn(false);
-    Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
+    Mockito.when(behorighetCache.isAuthorized(SENDER_2, NAMNRYMD_2, RECEIVER_1)).thenReturn(false);
+    Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorighetCache, defaultRoutingConfiguration);
     assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_2, RECEIVER_1));
   }
 
   @Test
   public void testTraceLogAuthorizedByDefaultRouting() throws Exception {
 
-    Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2)).thenReturn(false);
-    Mockito.when(takCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
+    Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2)).thenReturn(false);
+    Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
 
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorighetCache, defaultRoutingConfiguration);
 
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2));
     assertEquals("receiver-2,(parent)SE,(default)*",

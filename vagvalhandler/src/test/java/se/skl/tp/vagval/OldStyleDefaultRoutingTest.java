@@ -29,12 +29,13 @@ import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
 import se.skltp.takcache.RoutingInfo;
 import se.skltp.takcache.TakCache;
+import se.skltp.takcache.VagvalCache;
 
 public class OldStyleDefaultRoutingTest {
   HsaCache hsaCache;
 
   @Mock
-  TakCache takCache;
+  VagvalCache vagvalCache;
 
   VagvalHandlerImpl vagvalHandler;
   DefaultRoutingConfiguration defaultRoutingConfiguration;
@@ -52,11 +53,11 @@ public class OldStyleDefaultRoutingTest {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
-    Mockito.when(takCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
-    Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
+    Mockito.when(vagvalCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
+    Mockito.when(vagvalCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration );
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration );
 
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
@@ -78,11 +79,11 @@ public class OldStyleDefaultRoutingTest {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
-    Mockito.when(takCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
-    Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
+    Mockito.when(vagvalCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
+    Mockito.when(vagvalCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration );
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration );
 
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
@@ -106,13 +107,13 @@ public class OldStyleDefaultRoutingTest {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
-    Mockito.when(takCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
-    Mockito.when(takCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
+    Mockito.when(vagvalCache.getRoutingInfo(anyString(), eq(RECEIVER_2))).thenReturn(list);
+    Mockito.when(vagvalCache.getRoutingInfo(anyString(), AdditionalMatchers.not(eq(RECEIVER_2))))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
     DefaultRoutingConfiguration defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
     defaultRoutingConfiguration.setDelimiter("");
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
     assertTrue(routingInfoList.isEmpty());

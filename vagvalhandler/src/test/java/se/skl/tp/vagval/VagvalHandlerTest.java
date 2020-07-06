@@ -25,6 +25,7 @@ import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
 import se.skltp.takcache.RoutingInfo;
 import se.skltp.takcache.TakCache;
+import se.skltp.takcache.VagvalCache;
 
 
 public class VagvalHandlerTest {
@@ -32,7 +33,7 @@ public class VagvalHandlerTest {
   HsaCache hsaCache;
 
   @Mock
-  TakCache takCache;
+  VagvalCache vagvalCache;
 
   VagvalHandlerImpl vagvalHandler;
   DefaultRoutingConfiguration defaultRoutingConfiguration;
@@ -49,9 +50,9 @@ public class VagvalHandlerTest {
   public void testOneRoutingInfoFound() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_1, RIV20));
-    Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
+    Mockito.when(vagvalCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertEquals(1, routingInfoList.size());
@@ -63,9 +64,9 @@ public class VagvalHandlerTest {
   public void testOneRoutingInfoNoHsaCache() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_1, RIV20));
-    Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
+    Mockito.when(vagvalCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
 
-    vagvalHandler = new VagvalHandlerImpl(takCache);
+    vagvalHandler = new VagvalHandlerImpl(vagvalCache);
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertEquals(1, routingInfoList.size());
@@ -77,9 +78,9 @@ public class VagvalHandlerTest {
   public void testTraceLoggingOneRoutingInfoFound() throws Exception {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_1, RIV20));
-    Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
+    Mockito.when(vagvalCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertEquals(1, routingInfoList.size());
@@ -93,9 +94,9 @@ public class VagvalHandlerTest {
     list.add(createRoutingInfo(ADDRESS_1, RIV20));
     list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
-    Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
+    Mockito.when(vagvalCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1)).thenReturn(list);
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertEquals(2, routingInfoList.size());
@@ -107,10 +108,10 @@ public class VagvalHandlerTest {
 
   @Test
   public void testNoRoutingInfoFound() throws Exception {
-    Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1))
+    Mockito.when(vagvalCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertTrue(routingInfoList.isEmpty());
@@ -118,10 +119,10 @@ public class VagvalHandlerTest {
 
   @Test
   public void testTraceLoggingNoRoutingInfoFound() throws Exception {
-    Mockito.when(takCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1))
+    Mockito.when(vagvalCache.getRoutingInfo(NAMNRYMD_1, RECEIVER_1))
         .thenReturn(Collections.<RoutingInfo>emptyList());
 
-    vagvalHandler = new VagvalHandlerImpl(hsaCache, takCache, defaultRoutingConfiguration);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertTrue(routingInfoList.isEmpty());

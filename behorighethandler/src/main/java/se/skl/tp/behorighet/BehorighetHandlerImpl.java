@@ -11,7 +11,7 @@ import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.vagval.logging.LogTraceAppender;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
 import se.skl.tp.vagval.util.DefaultRoutingUtil;
-import se.skltp.takcache.TakCache;
+import se.skltp.takcache.BehorigheterCache;
 
 
 @Service
@@ -20,23 +20,23 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
   public static final String DEFAULT_RECEIVER_ADDRESS = "*";
 
   private HsaCache hsaCache;
-  private TakCache takCache;
+  private BehorigheterCache behorigheterCache;
 
   DefaultRoutingConfiguration defaultRoutingConfiguration;
 
   @Autowired
-  public BehorighetHandlerImpl(HsaCache hsaCache, TakCache takCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
+  public BehorighetHandlerImpl(HsaCache hsaCache, BehorigheterCache behorigheterCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
     this.hsaCache = hsaCache;
-    this.takCache = takCache;
+    this.behorigheterCache = behorigheterCache;
     this.defaultRoutingConfiguration = defaultRoutingConfiguration;
   }
 
-  public BehorighetHandlerImpl(HsaCache hsaCache, TakCache takCache) {
-    this(hsaCache, takCache, new DefaultRoutingConfigurationImpl());
+  public BehorighetHandlerImpl(HsaCache hsaCache, BehorigheterCache behorigheterCache) {
+    this(hsaCache, behorigheterCache, new DefaultRoutingConfigurationImpl());
   }
 
-  public BehorighetHandlerImpl(TakCache takCache) {
-    this(null, takCache, new DefaultRoutingConfigurationImpl());
+  public BehorighetHandlerImpl(BehorigheterCache behorigheterCache) {
+    this(null, behorigheterCache, new DefaultRoutingConfigurationImpl());
   }
 
   public boolean isAuthorized(String senderId, String servicecontractNamespace, String receiverId) {
@@ -60,7 +60,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
     }
 
     logTrace.append(receiverId);
-    if (takCache.isAuthorized(senderId, servicecontractNamespace, receiverId)) {
+    if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, receiverId)) {
       return true;
     }
 
@@ -69,7 +69,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
     }
 
     logTrace.append("(default)",DEFAULT_RECEIVER_ADDRESS);
-    return takCache.isAuthorized(senderId, servicecontractNamespace, DEFAULT_RECEIVER_ADDRESS);
+    return behorigheterCache.isAuthorized(senderId, servicecontractNamespace, DEFAULT_RECEIVER_ADDRESS);
   }
 
   private boolean isAuthorizedUsingDefaultRouting(String senderId, String servicecontractNamespace,
@@ -82,7 +82,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
     if(isParametersValidForDefaultRouting(receiverAddresses, senderId, servicecontractNamespace)){
       for (String receiverAddressTmp : receiverAddresses) {
         logTrace.append(receiverAddressTmp, ',');
-        if (takCache.isAuthorized(senderId, servicecontractNamespace, receiverAddressTmp)) {
+        if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, receiverAddressTmp)) {
           return true;
         }
       }
@@ -106,7 +106,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
     while (receiverId != DEFAUL_ROOTNODE) {
       receiverId = getHsaParent(receiverId);
       logTrace.append(receiverId, ',');
-      if (takCache.isAuthorized(senderId, servicecontractNamespace, receiverId)) {
+      if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, receiverId)) {
         return true;
       }
     }

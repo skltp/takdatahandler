@@ -4,10 +4,8 @@ import static se.skl.tp.hsa.cache.HsaCache.DEFAUL_ROOTNODE;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.skl.tp.DefaultRoutingConfiguration;
 import se.skl.tp.DefaultRoutingConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
@@ -15,7 +13,7 @@ import se.skl.tp.vagval.logging.LogTraceAppender;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
 import se.skl.tp.vagval.util.DefaultRoutingUtil;
 import se.skltp.takcache.RoutingInfo;
-import se.skltp.takcache.TakCache;
+import se.skltp.takcache.VagvalCache;
 
 @Service
 public class VagvalHandlerImpl implements VagvalHandler {
@@ -23,22 +21,22 @@ public class VagvalHandlerImpl implements VagvalHandler {
   public static final String DEFAULT_RECEIVER_ADDRESS = "*";
 
   private HsaCache hsaCache;
-  private TakCache takCache;
+  private VagvalCache vagvalCache;
   DefaultRoutingConfiguration defaultRoutingConfiguration;
 
   @Autowired
-  public VagvalHandlerImpl(HsaCache hsaCache, TakCache takCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
+  public VagvalHandlerImpl(HsaCache hsaCache, VagvalCache vagvalCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
     this.hsaCache = hsaCache;
-    this.takCache = takCache;
+    this.vagvalCache = vagvalCache;
     this.defaultRoutingConfiguration = defaultRoutingConfiguration;
   }
 
-  public VagvalHandlerImpl(HsaCache hsaCache, TakCache takCache) {
-    this( hsaCache, takCache, new DefaultRoutingConfigurationImpl());
+  public VagvalHandlerImpl(HsaCache hsaCache, VagvalCache vagvalCache) {
+    this( hsaCache, vagvalCache, new DefaultRoutingConfigurationImpl());
   }
 
-  public VagvalHandlerImpl(TakCache takCache) {
-    this( null, takCache, new DefaultRoutingConfigurationImpl());
+  public VagvalHandlerImpl(VagvalCache vagvalCache) {
+    this( null, vagvalCache, new DefaultRoutingConfigurationImpl());
   }
 
   public List<RoutingInfo> getRoutingInfo(String tjanstegranssnitt, String receiverAddress){
@@ -113,6 +111,6 @@ public class VagvalHandlerImpl implements VagvalHandler {
   }
 
   private List<RoutingInfo> getRoutingInfoFromTakCache(String tjanstegranssnitt, String receiverAddress) {
-    return takCache.getRoutingInfo(tjanstegranssnitt, receiverAddress);
+    return vagvalCache.getRoutingInfo(tjanstegranssnitt, receiverAddress);
   }
 }
