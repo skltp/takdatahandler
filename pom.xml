@@ -22,7 +22,8 @@
     <takcache.version>2.0.0</takcache.version>
     <junit.version>4.12</junit.version>
     <mockito.version>1.9.5</mockito.version>
-    <surefire.plugin.version>2.22.1</surefire.plugin.version>
+    <surefire.plugin.version>2.22.2</surefire.plugin.version>
+    <failsafe.plugin.version>2.22.2</failsafe.plugin.version>
     <jacoco.plugin.version>0.8.2</jacoco.plugin.version>
     <sonar.plugin.version>3.5.0.1254</sonar.plugin.version>
   </properties>
@@ -83,9 +84,32 @@
     </dependencies>
   </dependencyManagement>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${failsafe.plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire.plugin.version}</version>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
-        <id>test-coverage</id>
+      <id>test-coverage</id>
       <build>
         <plugins>
           <plugin>
