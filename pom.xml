@@ -11,6 +11,7 @@
     <module>vagvalhandler</module>
     <module>behorighethandler</module>
     <module>common</module>
+    <module>report</module>
   </modules>
 
   <properties>
@@ -24,6 +25,8 @@
     <surefire.plugin.version>2.22.1</surefire.plugin.version>
     <jacoco.plugin.version>0.8.2</jacoco.plugin.version>
     <sonar.plugin.version>3.5.0.1254</sonar.plugin.version>
+
+    <jacoco.reportPath>${project.basedir}/../target/jacoco.exec</jacoco.reportPath>
   </properties>
 
   <distributionManagement>
@@ -103,6 +106,9 @@
                 <goals>
                   <goal>report</goal>
                 </goals>
+                <configuration>
+                  <dataFile>${jacoco.reportPath}</dataFile>
+                </configuration>
               </execution>
             </executions>
           </plugin>
