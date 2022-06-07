@@ -21,7 +21,7 @@ pipeline {
                 configFileProvider([configFile(fileId: "byggReleaseConfig", variable: 'MAVEN_SETTINGS')]) {
                     sh 'pwd'
                     echo 'Compiling, testing and building...'
-                    sh 'mvn --global-settings ${MAVEN_SETTINGS} -script -P test-coverage clean install'
+                    sh 'mvn --global-settings ${MAVEN_SETTINGS} -P test-coverage clean install'
                     script {
                         pomVersion = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
                     }
