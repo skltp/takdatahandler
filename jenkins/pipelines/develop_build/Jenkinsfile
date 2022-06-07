@@ -29,9 +29,9 @@ pipeline {
             }
         }
         stage('SonarScanner'){
-            when {
-               branch '*/develop'
-            }
+            //when {
+            //   branch '*/develop'
+            //}
             steps {
                 withSonarQubeEnv(credentialsId: "${params.SONAR_TOKENID}", installationName: "${params.SONAR_ENV}") {
                     sh """${SCANNER_HOME}/bin/sonar-scanner \
@@ -53,13 +53,13 @@ pipeline {
                 echo 'Starting results handling...'
                 junit '**/target/surefire-reports/TEST-*.xml'
                 jacoco()
-                archiveArtifacts '**/target/*.war'
+                archiveArtifacts '**/target/*.jar'
                 echo "Branch: ${GIT_BRANCH}. Only handle Sonar results on the develop branch."
-                if ("${GIT_BRANCH}".endsWith('/develop')) {
+                //if ("${GIT_BRANCH}".endsWith('/develop')) {
                     timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
                     }
-                }
+                //}
             }
         }
 
