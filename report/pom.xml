@@ -8,12 +8,24 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>report</artifactId>
 
-
     <dependencies>
-
+        <dependency>
+            <groupId>se.skltp.takdatahandler</groupId>
+            <artifactId>common</artifactId>
+            <version>2.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>se.skltp.takdatahandler</groupId>
+            <artifactId>behorighethandler</artifactId>
+            <version>2.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>se.skltp.takdatahandler</groupId>
+            <artifactId>vagvalhandler</artifactId>
+            <version>2.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
