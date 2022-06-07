@@ -5,16 +5,16 @@
     <groupId>se.skltp.takdatahandler</groupId>
     <version>2.0.1-SNAPSHOT</version>
   </parent>
+
   <modelVersion>4.0.0</modelVersion>
-
   <artifactId>common</artifactId>
-
 
   <dependencies>
     <dependency>
       <groupId>se.skltp.hsa-cache</groupId>
       <artifactId>hsa-cache</artifactId>
     </dependency>
+
     <dependency>
       <groupId>se.skltp.takcache</groupId>
       <artifactId>takcache</artifactId>

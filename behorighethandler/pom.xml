@@ -5,9 +5,10 @@
     <groupId>se.skltp.takdatahandler</groupId>
     <version>2.0.1-SNAPSHOT</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
 
+  <modelVersion>4.0.0</modelVersion>
   <artifactId>behorighethandler</artifactId>
+
   <dependencies>
     <dependency>
       <groupId>se.skltp.takdatahandler</groupId>
@@ -21,6 +22,7 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>

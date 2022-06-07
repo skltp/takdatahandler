@@ -17,33 +17,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-
     <hsacache.version>1.0.3</hsacache.version>
     <takcache.version>2.0.0</takcache.version>
     <junit.version>4.12</junit.version>
     <mockito.version>1.9.5</mockito.version>
-
     <surefire.plugin.version>2.22.1</surefire.plugin.version>
-
-    <!-- ************************-->
-    <!-- Sonar/Reporting settings -->
-    <!-- ************************-->
     <jacoco.plugin.version>0.8.2</jacoco.plugin.version>
     <sonar.plugin.version>3.5.0.1254</sonar.plugin.version>
-
-    <sonar.host.url>http://localhost:9000</sonar.host.url>
-
-    <jacoco.outputDir>${project.build.directory}</jacoco.outputDir>
-    <jacoco.out.ut.file>jacoco-ut.exec</jacoco.out.ut.file>
-    <jacoco.out.it.file>jacoco-it.exec</jacoco.out.it.file>
-    <jacoco.reportPath>${project.basedir}/../target/jacoco.exec</jacoco.reportPath>
-
-    <sonar.language>java</sonar.language>
-    <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-    <sonar.jacoco.reportPath>${jacoco.outputDir}/${jacoco.out.ut.file}</sonar.jacoco.reportPath>
-    <!--<sonar.jacoco.itReportPath>${jacoco.outputDir}/${jacoco.out.it.file}</sonar.jacoco.itReportPaths>-->
-
   </properties>
 
   <distributionManagement>
@@ -70,7 +50,7 @@
   <repositories>
     <repository>
       <id>Inera-snapshots</id>
-      <url>https://nexus.inera.se/repository/maven-public/</url>
+      <url>https://nexus.drift.inera.se/repository/maven-public/</url>
       <snapshots><enabled>true</enabled></snapshots>
     </repository>
   </repositories>
@@ -102,54 +82,27 @@
     </dependencies>
   </dependencyManagement>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.sonarsource.scanner.maven</groupId>
-        <artifactId>sonar-maven-plugin</artifactId>
-        <version>${sonar.plugin.version}</version>
-      </plugin>
-    </plugins>
-  </build>
-
   <profiles>
     <profile>
         <id>test-coverage</id>
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>${surefire.plugin.version}</version>
-            <configuration>
-              <argLine>${surefireArgLine}</argLine>
-            </configuration>
-          </plugin>
-          <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>${jacoco.plugin.version}</version>
             <executions>
               <execution>
-                <id>pre-unit-test</id>
+                <id>default-prepare-agent</id>
                 <goals>
                   <goal>prepare-agent</goal>
                 </goals>
-                <configuration>
-                  <destFile>${sonar.jacoco.reportPath}</destFile>
-                  <propertyName>surefireArgLine</propertyName>
-                </configuration>
               </execution>
               <execution>
-                <id>post-unit-test</id>
-                <phase>test</phase>
+                <id>default-report</id>
                 <goals>
                   <goal>report</goal>
                 </goals>
-                <configuration>
-                  <dataFile>${jacoco.reportPath}</dataFile>
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-                </configuration>
               </execution>
             </executions>
           </plugin>
