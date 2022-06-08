@@ -2,8 +2,8 @@ package se.skl.tp.vagval;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_1;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_2;
