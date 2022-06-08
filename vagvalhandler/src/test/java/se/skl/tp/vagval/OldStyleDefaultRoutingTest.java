@@ -2,8 +2,8 @@ package se.skl.tp.vagval;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_2;
 import static se.skl.tp.vagval.util.TestTakDataDefines.NAMNRYMD_1;
