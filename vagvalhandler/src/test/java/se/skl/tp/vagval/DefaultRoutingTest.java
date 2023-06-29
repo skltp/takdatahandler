@@ -75,7 +75,7 @@ public class DefaultRoutingTest {
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_2);
     assertEquals(1, routingInfoList.size());
-    assertEquals("receiver-2,(parent)SE,(default)*",
+    assertEquals("receiver-2,(parent),SE,(default),*",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
   }
 

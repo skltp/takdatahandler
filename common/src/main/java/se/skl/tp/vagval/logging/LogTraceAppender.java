@@ -1,37 +1,26 @@
 package se.skl.tp.vagval.logging;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LogTraceAppender {
-  StringBuilder logTrace;
+  List<String> logTrace = new ArrayList<>();
 
-  public LogTraceAppender() {
-    this.logTrace = new StringBuilder();
-  }
+  public LogTraceAppender() {}
 
-  public LogTraceAppender(String toAppend) {
-    this.logTrace = new StringBuilder();
+  public LogTraceAppender(String... toAppend) {
     append(toAppend);
   }
 
-  public void append(Object... arguments){
-    for(Object argument: arguments){
-      logTrace.append(argument);
-    }
-  }
-
-  public void deleteLastChar(){
-    if(logTrace.length() > 0) {
-      logTrace.deleteCharAt(logTrace.length() - 1);
-    }
-  }
-
-  public void deleteCharIfLast(char ch){
-    if(logTrace.length() > 0 && logTrace.charAt(logTrace.length() - 1)==ch) {
-      logTrace.deleteCharAt(logTrace.length() - 1);
+  public void append(String... arguments){
+    for(String argument: arguments){
+      assert !argument.contains(",");
+      logTrace.add(argument);
     }
   }
 
   @Override
   public String toString(){
-    return logTrace.toString();
+    return String.join(",", logTrace);
   }
 }

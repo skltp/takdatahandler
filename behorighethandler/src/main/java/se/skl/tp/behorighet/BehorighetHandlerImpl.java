@@ -45,7 +45,6 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
 
     boolean isAuthorized = isAuthorized(senderId, servicecontractNamespace, receiverId, logTrace);
 
-    logTrace.deleteCharIfLast(',');
     ThreadContextLogTrace
         .put(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE, logTrace.toString());
     return isAuthorized;
@@ -69,7 +68,11 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
     }
 
     logTrace.append("(default)",DEFAULT_RECEIVER_ADDRESS);
-    return behorigheterCache.isAuthorized(senderId, servicecontractNamespace, DEFAULT_RECEIVER_ADDRESS);
+    if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, DEFAULT_RECEIVER_ADDRESS)) {
+      return true;
+    }
+
+    return false;
   }
 
   private boolean isAuthorizedUsingDefaultRouting(String senderId, String servicecontractNamespace,
@@ -81,7 +84,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
 
     if(isParametersValidForDefaultRouting(receiverAddresses, senderId, servicecontractNamespace)){
       for (String receiverAddressTmp : receiverAddresses) {
-        logTrace.append(receiverAddressTmp, ',');
+        logTrace.append(receiverAddressTmp);
         if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, receiverAddressTmp)) {
           return true;
         }
@@ -102,10 +105,10 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
 
   private boolean isAuthorizedByClimbingHsaTree(String senderId, String servicecontractNamespace,
       String receiverId, LogTraceAppender logTrace) {
-    logTrace.append(",(parent)");
+    logTrace.append("(parent)");
     while (receiverId != DEFAUL_ROOTNODE) {
       receiverId = getHsaParent(receiverId);
-      logTrace.append(receiverId, ',');
+      logTrace.append(receiverId);
       if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, receiverId)) {
         return true;
       }

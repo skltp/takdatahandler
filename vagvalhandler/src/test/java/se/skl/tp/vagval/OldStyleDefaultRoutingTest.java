@@ -88,17 +88,17 @@ public class OldStyleDefaultRoutingTest {
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
     assertEquals(1, routingInfoList.size());
-    assertEquals("(leaf)receiver-2",
+    assertEquals("(leaf),receiver-2",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
 
     routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_2_DEFAULT_RECEIVER_3);
     assertEquals(1, routingInfoList.size());
-    assertEquals("(leaf)receiver-3,receiver-2",
+    assertEquals("(leaf),receiver-3,receiver-2",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
 
     routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_3_DEFAULT_RECEIVER_4);
     assertTrue(routingInfoList.isEmpty());
-    assertEquals("(leaf)receiver-4,receiver-3",
+    assertEquals("(leaf),receiver-4,receiver-3",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
   }
 

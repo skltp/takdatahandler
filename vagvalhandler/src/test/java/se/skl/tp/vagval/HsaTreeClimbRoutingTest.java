@@ -91,7 +91,7 @@ public class HsaTreeClimbRoutingTest {
         .getRoutingInfo(NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);
     assertEquals(1, routingInfoList.size());
     String logResult = ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE);
-    assertEquals("SE0000000001-1234,(parent)SE0000000002-1234,SE0000000003-1234", logResult);
+    assertEquals("SE0000000001-1234,(parent),SE0000000002-1234,SE0000000003-1234", logResult);
   }
 
   @Test
