@@ -63,12 +63,12 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
       return true;
     }
 
-    if (hsaCache != null && isAuthorizedByClimbingHsaTree(senderId, servicecontractNamespace, receiverId, logTrace)) {
+    logTrace.append("(default)",DEFAULT_RECEIVER_ADDRESS);
+    if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, DEFAULT_RECEIVER_ADDRESS)) {
       return true;
     }
 
-    logTrace.append("(default)",DEFAULT_RECEIVER_ADDRESS);
-    if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, DEFAULT_RECEIVER_ADDRESS)) {
+    if (hsaCache != null && isAuthorizedByClimbingHsaTree(senderId, servicecontractNamespace, receiverId, logTrace)) {
       return true;
     }
 

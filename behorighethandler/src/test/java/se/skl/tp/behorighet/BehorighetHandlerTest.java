@@ -106,7 +106,7 @@ public class BehorighetHandlerTest {
     behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorigheterCache, defaultRoutingConfiguration);
 
     assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1));
-    assertEquals("receiver-1,(parent),SE,(default),*",
+    assertEquals("receiver-1,(default),*,(parent),SE",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE));
   }
 
@@ -140,7 +140,7 @@ public class BehorighetHandlerTest {
 
     assertTrue(behorighetHandler
         .isAuthorized(SENDER_1, NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
-    assertEquals("SE0000000001-1234,(parent),SE0000000002-1234,SE0000000003-1234",
+    assertEquals("SE0000000001-1234,(default),*,(parent),SE0000000002-1234,SE0000000003-1234",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE));
   }
 

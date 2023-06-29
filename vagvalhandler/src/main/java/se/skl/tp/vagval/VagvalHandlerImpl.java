@@ -45,7 +45,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
     LogTraceAppender logTrace = new LogTraceAppender();
 
     routingInfos = getRoutingInfo(tjanstegranssnitt, receiverAddress, logTrace);
-    logTrace.deleteCharIfLast(',');
+
     ThreadContextLogTrace.put(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE, logTrace.toString());
 
     return routingInfos;
@@ -77,10 +77,10 @@ public class VagvalHandlerImpl implements VagvalHandler {
   }
 
   private List<RoutingInfo> getRoutingInfoByClimbingHsaTree(String tjanstegranssnitt, String receiverAddress, LogTraceAppender logTrace) {
-    logTrace.append(",(parent)");
+    logTrace.append("(parent)");
     while (receiverAddress != DEFAUL_ROOTNODE) {
       receiverAddress = getHsaParent(receiverAddress);
-      logTrace.append(receiverAddress, ',');
+      logTrace.append(receiverAddress);
       List<RoutingInfo> routingInfoList = getRoutingInfoFromTakCache(tjanstegranssnitt, receiverAddress);
       if(!routingInfoList.isEmpty()){
         return routingInfoList;
@@ -100,7 +100,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
         defaultRoutingConfiguration.getDelimiter());
 
     for(String receiverAddressTmp : receiverAddresses){
-      logTrace.append(receiverAddressTmp,',');
+      logTrace.append(receiverAddressTmp);
       List<RoutingInfo> routingInfoList = getRoutingInfoFromTakCache(tjanstegranssnitt, receiverAddressTmp);
       if(!routingInfoList.isEmpty()){
         return routingInfoList;

@@ -79,7 +79,7 @@ public class BehorighetDefaultRouteTest {
     behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorighetCache, defaultRoutingConfiguration);
 
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2));
-    assertEquals("receiver-2,(parent),SE,(default),*",
+    assertEquals("receiver-2,(default),*",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE));
   }
 }
