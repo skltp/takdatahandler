@@ -14,7 +14,6 @@ public class LogTraceAppender {
 
   public void append(String... arguments){
     for(String argument: arguments){
-      assert !argument.contains(",");
       logTrace.add(argument);
     }
   }
