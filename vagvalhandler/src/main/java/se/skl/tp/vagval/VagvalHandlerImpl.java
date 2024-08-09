@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.skl.tp.DefaultRoutingConfiguration;
 import se.skl.tp.DefaultRoutingConfigurationImpl;
+import se.skl.tp.HsaLookupConfiguration;
+import se.skl.tp.HsaLookupConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.vagval.logging.LogTraceAppender;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
 import se.skl.tp.vagval.util.DefaultRoutingUtil;
+import se.skl.tp.vagval.util.HsaLookupUtil;
 import se.skltp.takcache.RoutingInfo;
 import se.skltp.takcache.VagvalCache;
 
@@ -23,12 +26,19 @@ public class VagvalHandlerImpl implements VagvalHandler {
   private HsaCache hsaCache;
   private VagvalCache vagvalCache;
   DefaultRoutingConfiguration defaultRoutingConfiguration;
+  HsaLookupConfiguration hsaLookupConfiguration;
 
   @Autowired
-  public VagvalHandlerImpl(HsaCache hsaCache, VagvalCache vagvalCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
+  public VagvalHandlerImpl(HsaCache hsaCache, VagvalCache vagvalCache, DefaultRoutingConfiguration defaultRoutingConfiguration,
+                           HsaLookupConfiguration hsaLookupConfiguration) {
     this.hsaCache = hsaCache;
     this.vagvalCache = vagvalCache;
     this.defaultRoutingConfiguration = defaultRoutingConfiguration;
+    this.hsaLookupConfiguration = hsaLookupConfiguration;
+  }
+
+  public VagvalHandlerImpl(HsaCache hsaCache, VagvalCache vagvalCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
+    this(hsaCache, vagvalCache, defaultRoutingConfiguration, new HsaLookupConfigurationImpl());
   }
 
   public VagvalHandlerImpl(HsaCache hsaCache, VagvalCache vagvalCache) {
@@ -65,8 +75,8 @@ public class VagvalHandlerImpl implements VagvalHandler {
       return routingInfos;
     }
 
-    if(hsaCache != null) {
-      routingInfos = getRoutingInfoByClimbingHsaTree(tjanstegranssnitt, receiverAddress, logTrace);
+    if(HsaLookupUtil.isHsaLookupEnabled(hsaCache, hsaLookupConfiguration, tjanstegranssnitt)) {
+      routingInfos = getRoutingInfoByHsaLookup(tjanstegranssnitt, receiverAddress, logTrace);
       if (!routingInfos.isEmpty()) {
         return routingInfos;
       }
@@ -76,7 +86,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
     return getRoutingInfoFromTakCache(tjanstegranssnitt, DEFAULT_RECEIVER_ADDRESS);
   }
 
-  private List<RoutingInfo> getRoutingInfoByClimbingHsaTree(String tjanstegranssnitt, String receiverAddress, LogTraceAppender logTrace) {
+  private List<RoutingInfo> getRoutingInfoByHsaLookup(String tjanstegranssnitt, String receiverAddress, LogTraceAppender logTrace) {
     logTrace.append("(parent)");
     while (receiverAddress != DEFAUL_ROOTNODE) {
       receiverAddress = getHsaParent(receiverAddress);
