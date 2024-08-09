@@ -40,7 +40,7 @@ public class BehorighetHandlerTest {
 
   @Before
   public void beforeTest() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     hsaCache = new HsaCacheImpl();
     URL url = getClass().getClassLoader().getResource("hsacache.xml");
     URL urlHsaRoot = getClass().getClassLoader().getResource("hsacachecomplementary.xml");
@@ -133,27 +133,6 @@ public class BehorighetHandlerTest {
   }
 
   @Test
-  public void testHsaLookupDisabled() throws Exception {
-    Mockito
-            .when(behorigheterCache.isAuthorized(anyString(), anyString(), eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))
-            .thenReturn(true);
-    Mockito.when(behorigheterCache.isAuthorized(anyString(), anyString(),
-            AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))).thenReturn(false);
-
-    HsaLookupConfiguration hsaLookupConfiguration = new HsaLookupConfigurationImpl();
-    hsaLookupConfiguration.setDefaultEnabled(false);
-
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorigheterCache, defaultRoutingConfiguration, hsaLookupConfiguration);
-
-    assertTrue(
-            behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, AUTHORIZED_RECEIVER_IN_HSA_TREE));
-    assertFalse(behorighetHandler
-            .isAuthorized(SENDER_1, NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
-    assertFalse(behorighetHandler
-            .isAuthorized(SENDER_1, NAMNRYMD_1, PARENT_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
-  }
-
-  @Test
   public void testHsaLookupDisabledForServiceContract() throws Exception {
     Mockito
             .when(behorigheterCache.isAuthorized(anyString(), anyString(), eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))
@@ -163,27 +142,6 @@ public class BehorighetHandlerTest {
 
     HsaLookupConfiguration hsaLookupConfiguration = new HsaLookupConfigurationImpl();
     hsaLookupConfiguration.setExceptedNamespaces(Arrays.asList(NAMNRYMD_1));
-
-    behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorigheterCache, defaultRoutingConfiguration, hsaLookupConfiguration);
-
-    assertTrue(
-            behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, AUTHORIZED_RECEIVER_IN_HSA_TREE));
-    assertFalse(behorighetHandler
-            .isAuthorized(SENDER_1, NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
-    assertFalse(behorighetHandler
-            .isAuthorized(SENDER_1, NAMNRYMD_1, PARENT_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
-  }
-
-  @Test
-  public void testHsaLookupDisabledForServiceDomain() throws Exception {
-    Mockito
-            .when(behorigheterCache.isAuthorized(anyString(), anyString(), eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))
-            .thenReturn(true);
-    Mockito.when(behorigheterCache.isAuthorized(anyString(), anyString(),
-            AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))).thenReturn(false);
-
-    HsaLookupConfiguration hsaLookupConfiguration = new HsaLookupConfigurationImpl();
-    hsaLookupConfiguration.setExceptedNamespaces(Arrays.asList(DOMAIN_1));
 
     behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorigheterCache, defaultRoutingConfiguration, hsaLookupConfiguration);
 

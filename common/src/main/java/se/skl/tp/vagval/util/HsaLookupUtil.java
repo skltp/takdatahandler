@@ -12,6 +12,7 @@ public class HsaLookupUtil {
         if (hsaCache == null) return false;
         boolean defaultSetting = configuration.getDefaultEnabled();
         for(String exceptedNamespace : configuration.getExceptedNamespaces()) {
+            if (exceptedNamespace == null || exceptedNamespace.isBlank()) continue;
             if (namespace.startsWith(exceptedNamespace)) return !defaultSetting;
         }
         return defaultSetting;
