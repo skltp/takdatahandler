@@ -40,7 +40,7 @@ public class VagvalHandlerTest {
 
   @Before
   public void beforeTest() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     hsaCache = new HsaCacheImpl();
     defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
     defaultRoutingConfiguration.setDelimiter("#");
