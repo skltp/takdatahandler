@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.skl.tp.DefaultRoutingConfiguration;
 import se.skl.tp.DefaultRoutingConfigurationImpl;
+import se.skl.tp.HsaLookupConfiguration;
+import se.skl.tp.HsaLookupConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.vagval.logging.LogTraceAppender;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
@@ -23,12 +25,19 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
   private BehorigheterCache behorigheterCache;
 
   DefaultRoutingConfiguration defaultRoutingConfiguration;
+  HsaLookupConfiguration hsaLookupConfiguration;
 
   @Autowired
-  public BehorighetHandlerImpl(HsaCache hsaCache, BehorigheterCache behorigheterCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
+  public BehorighetHandlerImpl(HsaCache hsaCache, BehorigheterCache behorigheterCache,
+                               DefaultRoutingConfiguration defaultRoutingConfiguration, HsaLookupConfiguration hsaLookupConfiguration) {
     this.hsaCache = hsaCache;
     this.behorigheterCache = behorigheterCache;
     this.defaultRoutingConfiguration = defaultRoutingConfiguration;
+    this.hsaLookupConfiguration = hsaLookupConfiguration;
+  }
+
+  public BehorighetHandlerImpl(HsaCache hsaCache, BehorigheterCache behorigheterCache, DefaultRoutingConfiguration defaultRoutingConfiguration) {
+    this(hsaCache, behorigheterCache, defaultRoutingConfiguration, new HsaLookupConfigurationImpl());
   }
 
   public BehorighetHandlerImpl(HsaCache hsaCache, BehorigheterCache behorigheterCache) {
@@ -68,11 +77,8 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
       return true;
     }
 
-    if (hsaCache != null && isAuthorizedByClimbingHsaTree(senderId, servicecontractNamespace, receiverId, logTrace)) {
-      return true;
-    }
-
-    return false;
+    return hsaLookupEnabled(servicecontractNamespace)
+            && isAuthorizedByClimbingHsaTree(senderId, servicecontractNamespace, receiverId, logTrace);
   }
 
   private boolean isAuthorizedUsingDefaultRouting(String senderId, String servicecontractNamespace,
@@ -101,6 +107,15 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
     return receiverAddresses.size()<=2
         && DefaultRoutingUtil.isParameterAllowed(servicecontractNamespace, defaultRoutingConfiguration.getAllowedContracts())
         && DefaultRoutingUtil.isParameterAllowed(senderId, defaultRoutingConfiguration.getAllowedSenderIds());
+  }
+
+  private boolean hsaLookupEnabled(String servicecontractNamespace) {
+    if (hsaCache == null) return false;
+    boolean defaultSetting = hsaLookupConfiguration.getDefaultEnabled();
+    for(String exceptedNamespace : hsaLookupConfiguration.getExceptedNamespaces()) {
+      if (servicecontractNamespace.startsWith(exceptedNamespace)) return !defaultSetting;
+    }
+    return defaultSetting;
   }
 
   private boolean isAuthorizedByClimbingHsaTree(String senderId, String servicecontractNamespace,

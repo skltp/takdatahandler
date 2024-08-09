@@ -2,8 +2,9 @@ package se.skl.tp.behorighet.util;
 
 public class TestTakDataDefines {
 
-  public static final String NAMNRYMD_1 = "namnrymd-1";
-  public static final String NAMNRYMD_2 = "namnrymd-2";
+  public static final String NAMNRYMD_1 = "riv:abc:namnrymd-1";
+  public static final String NAMNRYMD_2 = "riv:abc:namnrymd-2";
+  public static final String DOMAIN_1 = "riv:abc";
   public static final String RECEIVER_1 = "receiver-1";
   public static final String RECEIVER_2 = "receiver-2";
   public static final String RECEIVER_3 = "receiver-3";
