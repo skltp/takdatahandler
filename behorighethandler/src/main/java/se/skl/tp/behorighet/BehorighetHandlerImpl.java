@@ -13,6 +13,7 @@ import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.vagval.logging.LogTraceAppender;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
 import se.skl.tp.vagval.util.DefaultRoutingUtil;
+import se.skl.tp.vagval.util.HsaLookupUtil;
 import se.skltp.takcache.BehorigheterCache;
 
 
@@ -77,8 +78,8 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
       return true;
     }
 
-    return hsaLookupEnabled(servicecontractNamespace)
-            && isAuthorizedByClimbingHsaTree(senderId, servicecontractNamespace, receiverId, logTrace);
+    return HsaLookupUtil.isHsaLookupEnabled(hsaCache, hsaLookupConfiguration, servicecontractNamespace)
+            && isAuthorizedUsingHsaLookup(senderId, servicecontractNamespace, receiverId, logTrace);
   }
 
   private boolean isAuthorizedUsingDefaultRouting(String senderId, String servicecontractNamespace,
@@ -109,17 +110,8 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
         && DefaultRoutingUtil.isParameterAllowed(senderId, defaultRoutingConfiguration.getAllowedSenderIds());
   }
 
-  private boolean hsaLookupEnabled(String servicecontractNamespace) {
-    if (hsaCache == null) return false;
-    boolean defaultSetting = hsaLookupConfiguration.getDefaultEnabled();
-    for(String exceptedNamespace : hsaLookupConfiguration.getExceptedNamespaces()) {
-      if (servicecontractNamespace.startsWith(exceptedNamespace)) return !defaultSetting;
-    }
-    return defaultSetting;
-  }
-
-  private boolean isAuthorizedByClimbingHsaTree(String senderId, String servicecontractNamespace,
-      String receiverId, LogTraceAppender logTrace) {
+  private boolean isAuthorizedUsingHsaLookup(String senderId, String servicecontractNamespace,
+                                             String receiverId, LogTraceAppender logTrace) {
     logTrace.append("(parent)");
     while (receiverId != DEFAUL_ROOTNODE) {
       receiverId = getHsaParent(receiverId);
