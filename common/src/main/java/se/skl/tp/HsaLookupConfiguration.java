@@ -3,7 +3,7 @@ package se.skl.tp;
 import java.util.List;
 
 public interface HsaLookupConfiguration {
-    boolean getDefaultEnabled();
+    boolean isDefaultEnabled();
 
     void setDefaultEnabled(boolean defaultEnabled);
 

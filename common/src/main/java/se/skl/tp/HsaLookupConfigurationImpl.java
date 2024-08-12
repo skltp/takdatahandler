@@ -9,7 +9,7 @@ public class HsaLookupConfigurationImpl implements HsaLookupConfiguration {
     List<String> exceptedNamespaces = new ArrayList<>();
 
     @Override
-    public boolean getDefaultEnabled() {
+    public boolean isDefaultEnabled() {
         return defaultEnabled;
     }
 

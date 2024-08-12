@@ -10,7 +10,7 @@ public class HsaLookupUtil {
 
     public static boolean isHsaLookupEnabled(Object hsaCache, HsaLookupConfiguration configuration, String namespace) {
         if (hsaCache == null) return false;
-        boolean defaultSetting = configuration.getDefaultEnabled();
+        boolean defaultSetting = configuration.isDefaultEnabled();
         for(String exceptedNamespace : configuration.getExceptedNamespaces()) {
             if (exceptedNamespace == null || exceptedNamespace.isBlank()) continue;
             if (namespace.startsWith(exceptedNamespace)) return !defaultSetting;

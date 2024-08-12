@@ -4,8 +4,6 @@ import static se.skl.tp.hsa.cache.HsaCache.DEFAUL_ROOTNODE;
 
 import java.util.Collections;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import se.skl.tp.DefaultRoutingConfiguration;
 import se.skl.tp.DefaultRoutingConfigurationImpl;
 import se.skl.tp.HsaLookupConfiguration;
@@ -18,7 +16,6 @@ import se.skl.tp.vagval.util.HsaLookupUtil;
 import se.skltp.takcache.RoutingInfo;
 import se.skltp.takcache.VagvalCache;
 
-@Service
 public class VagvalHandlerImpl implements VagvalHandler {
 
   public static final String DEFAULT_RECEIVER_ADDRESS = "*";
@@ -28,7 +25,6 @@ public class VagvalHandlerImpl implements VagvalHandler {
   DefaultRoutingConfiguration defaultRoutingConfiguration;
   HsaLookupConfiguration hsaLookupConfiguration;
 
-  @Autowired
   public VagvalHandlerImpl(HsaCache hsaCache, VagvalCache vagvalCache, DefaultRoutingConfiguration defaultRoutingConfiguration,
                            HsaLookupConfiguration hsaLookupConfiguration) {
     this.hsaCache = hsaCache;
