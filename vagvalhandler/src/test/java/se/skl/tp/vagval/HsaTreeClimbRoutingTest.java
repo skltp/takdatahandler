@@ -2,8 +2,8 @@ package se.skl.tp.vagval;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_2;
 import static se.skl.tp.vagval.util.TestTakDataDefines.AUTHORIZED_RECEIVER_IN_HSA_TREE;
@@ -24,6 +24,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import se.skl.tp.DefaultRoutingConfiguration;
 import se.skl.tp.DefaultRoutingConfigurationImpl;
+import se.skl.tp.HsaLookupConfiguration;
+import se.skl.tp.HsaLookupConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
@@ -44,7 +46,7 @@ public class HsaTreeClimbRoutingTest {
 
   @Before
   public void beforeTest() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
 
     hsaCache = new HsaCacheImpl();
     URL url = getClass().getClassLoader().getResource("hsacache.xml");
@@ -91,7 +93,7 @@ public class HsaTreeClimbRoutingTest {
         .getRoutingInfo(NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);
     assertEquals(1, routingInfoList.size());
     String logResult = ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE);
-    assertEquals("SE0000000001-1234,(parent)SE0000000002-1234,SE0000000003-1234", logResult);
+    assertEquals("SE0000000001-1234,(parent),SE0000000002-1234,SE0000000003-1234", logResult);
   }
 
   @Test
@@ -112,5 +114,23 @@ public class HsaTreeClimbRoutingTest {
     assertTrue(routingInfoList.isEmpty());
   }
 
+  @Test
+  public void testHsaLoopkupDisabled() throws Exception {
+    List<RoutingInfo> list = new ArrayList<>();
+    list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
+    Mockito.when(vagvalCache.getRoutingInfo(anyString(), eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))
+            .thenReturn(list);
+    Mockito.when(vagvalCache
+                    .getRoutingInfo(anyString(), AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE))))
+            .thenReturn(Collections.<RoutingInfo>emptyList());
+
+    HsaLookupConfiguration hsaLookupConfiguration = new HsaLookupConfigurationImpl();
+    hsaLookupConfiguration.setDefaultEnabled(false);
+    vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration, hsaLookupConfiguration);
+
+    List<RoutingInfo> routingInfoList = vagvalHandler
+            .getRoutingInfo(NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);
+    assertTrue(routingInfoList.isEmpty());
+  }
 }

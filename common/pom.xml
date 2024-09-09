@@ -3,18 +3,18 @@
   <parent>
     <artifactId>tak-data-handler</artifactId>
     <groupId>se.skltp.takdatahandler</groupId>
-    <version>2.0.0</version>
+    <version>3.1.1-SNAPSHOT</version>
   </parent>
+
   <modelVersion>4.0.0</modelVersion>
-
   <artifactId>common</artifactId>
-
 
   <dependencies>
     <dependency>
       <groupId>se.skltp.hsa-cache</groupId>
       <artifactId>hsa-cache</artifactId>
     </dependency>
+
     <dependency>
       <groupId>se.skltp.takcache</groupId>
       <artifactId>takcache</artifactId>
@@ -25,6 +25,12 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
- </dependencies>
 
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.36</version>
+      <scope>test</scope>
+    </dependency>
+ </dependencies>
 </project>

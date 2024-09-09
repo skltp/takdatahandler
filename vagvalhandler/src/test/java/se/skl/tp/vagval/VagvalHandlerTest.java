@@ -40,7 +40,7 @@ public class VagvalHandlerTest {
 
   @Before
   public void beforeTest() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     hsaCache = new HsaCacheImpl();
     defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
     defaultRoutingConfiguration.setDelimiter("#");
@@ -126,7 +126,7 @@ public class VagvalHandlerTest {
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertTrue(routingInfoList.isEmpty());
-    assertEquals("receiver-1,(parent)SE,(default)*",
+    assertEquals("receiver-1,(parent),SE,(default),*",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
   }
 

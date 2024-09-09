@@ -2,8 +2,8 @@ package se.skl.tp.vagval;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_1;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_2;
@@ -45,7 +45,7 @@ public class DefaultRoutingTest {
 
   @Before
   public void beforeTest() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     hsaCache = new HsaCacheImpl();
     URL url = getClass().getClassLoader().getResource("hsacache.xml");
     URL urlHsaRoot = getClass().getClassLoader().getResource("hsacachecomplementary.xml");
@@ -75,7 +75,7 @@ public class DefaultRoutingTest {
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_2);
     assertEquals(1, routingInfoList.size());
-    assertEquals("receiver-2,(parent)SE,(default)*",
+    assertEquals("receiver-2,(parent),SE,(default),*",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
   }
 

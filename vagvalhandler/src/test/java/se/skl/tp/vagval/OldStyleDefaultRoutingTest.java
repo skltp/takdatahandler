@@ -2,8 +2,8 @@ package se.skl.tp.vagval;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
 import static se.skl.tp.vagval.util.TestTakDataDefines.ADDRESS_2;
 import static se.skl.tp.vagval.util.TestTakDataDefines.NAMNRYMD_1;
@@ -42,7 +42,7 @@ public class OldStyleDefaultRoutingTest {
 
   @Before
   public void beforeTest() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     hsaCache = new HsaCacheImpl();
     defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
     defaultRoutingConfiguration.setDelimiter("#");
@@ -88,17 +88,17 @@ public class OldStyleDefaultRoutingTest {
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
     assertEquals(1, routingInfoList.size());
-    assertEquals("(leaf)receiver-2",
+    assertEquals("(leaf),receiver-2",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
 
     routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_2_DEFAULT_RECEIVER_3);
     assertEquals(1, routingInfoList.size());
-    assertEquals("(leaf)receiver-3,receiver-2",
+    assertEquals("(leaf),receiver-3,receiver-2",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
 
     routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_3_DEFAULT_RECEIVER_4);
     assertTrue(routingInfoList.isEmpty());
-    assertEquals("(leaf)receiver-4,receiver-3",
+    assertEquals("(leaf),receiver-4,receiver-3",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_VAGVAL_TRACE));
   }
 

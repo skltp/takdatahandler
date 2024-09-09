@@ -3,23 +3,9 @@ package se.skl.tp.behorighet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.AUTHORIZED_RECEIVER_IN_HSA_TREE;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.NAMNRYMD_1;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.NAMNRYMD_2;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.PARENT_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_1;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_1_DEFAULT_RECEIVER_1;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_1_DEFAULT_RECEIVER_2;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_2;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_2_DEFAULT_RECEIVER_3;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_2_RECEIVER_3_RECIEVER_4;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_3_DEFAULT_RECEIVER_4;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.RECEIVER_4_RECEIVER_3_RECIEVER_2;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.SENDER_1;
-import static se.skl.tp.behorighet.util.TestTakDataDefines.SENDER_2;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static se.skl.tp.behorighet.util.TestTakDataDefines.*;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -31,6 +17,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import se.skl.tp.DefaultRoutingConfiguration;
 import se.skl.tp.DefaultRoutingConfigurationImpl;
+import se.skl.tp.HsaLookupConfiguration;
+import se.skl.tp.HsaLookupConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
@@ -52,7 +40,7 @@ public class BehorighetHandlerTest {
 
   @Before
   public void beforeTest() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     hsaCache = new HsaCacheImpl();
     URL url = getClass().getClassLoader().getResource("hsacache.xml");
     URL urlHsaRoot = getClass().getClassLoader().getResource("hsacachecomplementary.xml");
@@ -106,7 +94,7 @@ public class BehorighetHandlerTest {
     behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorigheterCache, defaultRoutingConfiguration);
 
     assertFalse(behorighetHandler.isAuthorized(SENDER_2, NAMNRYMD_1, RECEIVER_1));
-    assertEquals("receiver-1,(parent)SE,(default)*",
+    assertEquals("receiver-1,(default),*,(parent),SE",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE));
   }
 
@@ -140,8 +128,29 @@ public class BehorighetHandlerTest {
 
     assertTrue(behorighetHandler
         .isAuthorized(SENDER_1, NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
-    assertEquals("SE0000000001-1234,(parent)SE0000000002-1234,SE0000000003-1234",
+    assertEquals("SE0000000001-1234,(default),*,(parent),SE0000000002-1234,SE0000000003-1234",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE));
+  }
+
+  @Test
+  public void testHsaLookupDisabledForServiceContract() throws Exception {
+    Mockito
+            .when(behorigheterCache.isAuthorized(anyString(), anyString(), eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))
+            .thenReturn(true);
+    Mockito.when(behorigheterCache.isAuthorized(anyString(), anyString(),
+            AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE)))).thenReturn(false);
+
+    HsaLookupConfiguration hsaLookupConfiguration = new HsaLookupConfigurationImpl();
+    hsaLookupConfiguration.setExceptedNamespaces(Arrays.asList(NAMNRYMD_1));
+
+    behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorigheterCache, defaultRoutingConfiguration, hsaLookupConfiguration);
+
+    assertTrue(
+            behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, AUTHORIZED_RECEIVER_IN_HSA_TREE));
+    assertFalse(behorighetHandler
+            .isAuthorized(SENDER_1, NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
+    assertFalse(behorighetHandler
+            .isAuthorized(SENDER_1, NAMNRYMD_1, PARENT_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE));
   }
 
   @Test
@@ -242,16 +251,16 @@ public class BehorighetHandlerTest {
     behorighetHandler = new BehorighetHandlerImpl(hsaCache, behorigheterCache, defaultRoutingConfiguration);
 
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2));
-    assertEquals("(leaf)receiver-2",
+    assertEquals("(leaf),receiver-2",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE));
 
     assertTrue(behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2_DEFAULT_RECEIVER_3));
-    assertEquals("(leaf)receiver-3,receiver-2",
+    assertEquals("(leaf),receiver-3,receiver-2",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE));
 
     assertFalse(
         behorighetHandler.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_3_DEFAULT_RECEIVER_4));
-    assertEquals("(leaf)receiver-4,receiver-3",
+    assertEquals("(leaf),receiver-4,receiver-3",
         ThreadContextLogTrace.get(ThreadContextLogTrace.ROUTER_RESOLVE_ANROPSBEHORIGHET_TRACE));
   }
 
