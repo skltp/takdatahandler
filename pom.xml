@@ -1,32 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>se.skltp.takdatahandler</groupId>
   <artifactId>tak-data-handler</artifactId>
+  <version>3.3.0</version>
   <packaging>pom</packaging>
-  <version>3.3.0-SNAPSHOT</version>
-
   <modules>
     <module>vagvalhandler</module>
     <module>behorighethandler</module>
     <module>common</module>
     <module>report</module>
   </modules>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.release>17</maven.compiler.release>
-    <hsacache.version>1.3.0</hsacache.version>
-    <takcache.version>2.2.0</takcache.version>
-    <junit.version>4.13.2</junit.version>
-    <mockito.version>4.0.0</mockito.version><!--1.9.5-->
-    <surefire.plugin.version>2.22.2</surefire.plugin.version>
-    <failsafe.plugin.version>2.22.2</failsafe.plugin.version>
-    <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
-    <sonar.plugin.version>3.5.0.1254</sonar.plugin.version>
-  </properties>
-
+  <scm>
+    <connection>scm:git:https://github.com/skltp/takdatahandler.git</connection>
+    <developerConnection>scm:git:https://github.com/skltp/takdatahandler.git</developerConnection>
+    <url>https://github.com/skltp/takdatahandler.git</url>
+  </scm>
   <distributionManagement>
     <repository>
       <id>release-nexus</id>
@@ -39,23 +29,18 @@
       <url>${snapshot-nexus-url}</url>
     </snapshotRepository>
   </distributionManagement>
-
-  <scm>
-    <url>https://github.com/skltp/takdatahandler.git</url>
-    <connection>scm:git:https://github.com/skltp/takdatahandler.git</connection>
-    <developerConnection>scm:git:https://github.com/skltp/takdatahandler.git
-    </developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-
-  <repositories>
-    <repository>
-      <id>Inera-snapshots</id>
-      <url>https://nexus.drift.inera.se/repository/maven-public/</url>
-      <snapshots><enabled>true</enabled></snapshots>
-    </repository>
-  </repositories>
-
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <failsafe.plugin.version>2.22.2</failsafe.plugin.version>
+    <takcache.version>2.2.0</takcache.version>
+    <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <surefire.plugin.version>2.22.2</surefire.plugin.version>
+    <junit.version>4.13.2</junit.version>
+    <mockito.version>4.0.0</mockito.version>
+    <hsacache.version>1.3.0</hsacache.version>
+    <sonar.plugin.version>3.5.0.1254</sonar.plugin.version>
+  </properties>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -88,11 +73,18 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>Inera-snapshots</id>
+      <url>https://nexus.drift.inera.se/repository/maven-public/</url>
+    </repository>
+  </repositories>
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${failsafe.plugin.version}</version>
         <executions>
@@ -105,13 +97,11 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.plugin.version}</version>
       </plugin>
     </plugins>
   </build>
-
   <profiles>
     <profile>
       <id>test-coverage</id>
@@ -140,5 +130,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
