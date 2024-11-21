@@ -5,7 +5,7 @@
   <parent>
     <groupId>se.skltp.takdatahandler</groupId>
     <artifactId>tak-data-handler</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
   </parent>
   <artifactId>common</artifactId>
   <dependencies>
