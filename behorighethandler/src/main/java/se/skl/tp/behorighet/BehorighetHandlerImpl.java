@@ -19,11 +19,11 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
 
   public static final String DEFAULT_RECEIVER_ADDRESS = "*";
 
-  private HsaCache hsaCache;
-  private BehorigheterCache behorigheterCache;
+  private final HsaCache hsaCache;
+  private final BehorigheterCache behorigheterCache;
 
-  DefaultRoutingConfiguration defaultRoutingConfiguration;
-  HsaLookupConfiguration hsaLookupConfiguration;
+  private final DefaultRoutingConfiguration defaultRoutingConfiguration;
+  private final HsaLookupConfiguration hsaLookupConfiguration;
 
   public BehorighetHandlerImpl(HsaCache hsaCache, BehorigheterCache behorigheterCache,
                                DefaultRoutingConfiguration defaultRoutingConfiguration, HsaLookupConfiguration hsaLookupConfiguration) {
@@ -83,7 +83,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
     logTrace.append("(leaf)");
 
     List<String> receiverAddresses = DefaultRoutingUtil
-        .extractReceiverAdresses(receiverId, defaultRoutingConfiguration.getDelimiter());
+        .extractReceiverAddresses(receiverId, defaultRoutingConfiguration.getDelimiter());
 
     if(isParametersValidForDefaultRouting(receiverAddresses, senderId, servicecontractNamespace)){
       for (String receiverAddressTmp : receiverAddresses) {
@@ -109,7 +109,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
   private boolean isAuthorizedUsingHsaLookup(String senderId, String servicecontractNamespace,
                                              String receiverId, LogTraceAppender logTrace) {
     logTrace.append("(parent)");
-    while (receiverId != DEFAUL_ROOTNODE) {
+    while (!DEFAUL_ROOTNODE.equals(receiverId)) {
       receiverId = getHsaParent(receiverId);
       logTrace.append(receiverId);
       if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, receiverId)) {

@@ -1,7 +1,7 @@
 package se.skl.tp.vagval;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static se.skl.tp.vagval.util.RoutingInfoUtil.createRoutingInfo;
@@ -16,8 +16,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Objects;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -30,10 +33,9 @@ import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
 import se.skltp.takcache.RoutingInfo;
-import se.skltp.takcache.TakCache;
 import se.skltp.takcache.VagvalCache;
 
-public class HsaTreeClimbRoutingTest {
+class HsaTreeClimbRoutingTest {
   HsaCache hsaCache;
 
   @Mock
@@ -43,21 +45,27 @@ public class HsaTreeClimbRoutingTest {
 
   DefaultRoutingConfiguration defaultRoutingConfiguration;
 
+  AutoCloseable mocks;
 
-  @Before
-  public void beforeTest() {
-    MockitoAnnotations.openMocks(this);
+  @BeforeEach
+  void beforeTest() {
+    mocks = MockitoAnnotations.openMocks(this);
 
     hsaCache = new HsaCacheImpl();
-    URL url = getClass().getClassLoader().getResource("hsacache.xml");
-    URL urlHsaRoot = getClass().getClassLoader().getResource("hsacachecomplementary.xml");
+    URL url = Objects.requireNonNull(getClass().getClassLoader().getResource("hsacache.xml"));
+    URL urlHsaRoot = Objects.requireNonNull(getClass().getClassLoader().getResource("hsacachecomplementary.xml"));
     hsaCache.init(url.getFile(), urlHsaRoot.getFile());
     defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
     defaultRoutingConfiguration.setDelimiter("#");
   }
 
+  @AfterEach
+  void afterTest() throws Exception {
+    mocks.close();
+  }
+
   @Test
-  public void testRoutingShouldBeFoundOnChildInHsaTree() throws Exception {
+  void testRoutingShouldBeFoundOnChildInHsaTree() {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
@@ -65,19 +73,19 @@ public class HsaTreeClimbRoutingTest {
         .thenReturn(list);
     Mockito.when(vagvalCache
         .getRoutingInfo(anyString(), AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE))))
-        .thenReturn(Collections.<RoutingInfo>emptyList());
+        .thenReturn(Collections.emptyList());
 
     vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
 
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);
     assertEquals(1, routingInfoList.size());
-    assertEquals(ADDRESS_2, routingInfoList.get(0).getAddress());
-    assertEquals(RIV21, routingInfoList.get(0).getRivProfile());
+    assertEquals(ADDRESS_2, routingInfoList.getFirst().getAddress());
+    assertEquals(RIV21, routingInfoList.getFirst().getRivProfile());
   }
 
   @Test
-  public void testTraceLoggingWhenRoutingFoundOnChildInHsaTree() throws Exception {
+  void testTraceLoggingWhenRoutingFoundOnChildInHsaTree() {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
@@ -85,7 +93,7 @@ public class HsaTreeClimbRoutingTest {
         .thenReturn(list);
     Mockito.when(vagvalCache
         .getRoutingInfo(anyString(), AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE))))
-        .thenReturn(Collections.<RoutingInfo>emptyList());
+        .thenReturn(Collections.emptyList());
 
     vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
 
@@ -97,7 +105,7 @@ public class HsaTreeClimbRoutingTest {
   }
 
   @Test
-  public void testRoutingShouldNotBeFoundOnParentInHsaTree() throws Exception {
+  void testRoutingShouldNotBeFoundOnParentInHsaTree() {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
@@ -105,7 +113,7 @@ public class HsaTreeClimbRoutingTest {
         .thenReturn(list);
     Mockito.when(vagvalCache
         .getRoutingInfo(anyString(), AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE))))
-        .thenReturn(Collections.<RoutingInfo>emptyList());
+        .thenReturn(Collections.emptyList());
 
     vagvalHandler = new VagvalHandlerImpl(hsaCache, vagvalCache, defaultRoutingConfiguration);
 
@@ -115,7 +123,7 @@ public class HsaTreeClimbRoutingTest {
   }
 
   @Test
-  public void testHsaLoopkupDisabled() throws Exception {
+  void testHsaLookupDisabled() {
     List<RoutingInfo> list = new ArrayList<>();
     list.add(createRoutingInfo(ADDRESS_2, RIV21));
 
@@ -123,7 +131,7 @@ public class HsaTreeClimbRoutingTest {
             .thenReturn(list);
     Mockito.when(vagvalCache
                     .getRoutingInfo(anyString(), AdditionalMatchers.not(eq(AUTHORIZED_RECEIVER_IN_HSA_TREE))))
-            .thenReturn(Collections.<RoutingInfo>emptyList());
+            .thenReturn(Collections.emptyList());
 
     HsaLookupConfiguration hsaLookupConfiguration = new HsaLookupConfigurationImpl();
     hsaLookupConfiguration.setDefaultEnabled(false);

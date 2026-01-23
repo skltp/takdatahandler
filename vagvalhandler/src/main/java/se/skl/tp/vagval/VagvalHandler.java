@@ -4,5 +4,5 @@ import java.util.List;
 import se.skltp.takcache.RoutingInfo;
 
 public interface VagvalHandler {
-  public List<RoutingInfo> getRoutingInfo(String tjanstegranssnitt, String receiverAddress);
+  List<RoutingInfo> getRoutingInfo(String tjanstegranssnitt, String receiverAddress);
 }

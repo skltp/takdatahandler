@@ -1,8 +1,6 @@
 package se.skl.tp.behorighet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.DEFAULT_RECEIVER;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.NAMNRYMD_1;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.NAMNRYMD_2;
@@ -12,8 +10,11 @@ import static se.skl.tp.behorighet.util.TestTakDataDefines.SENDER_1;
 import static se.skl.tp.behorighet.util.TestTakDataDefines.SENDER_2;
 
 import java.net.URL;
-import org.junit.Before;
-import org.junit.Test;
+import java.util.Objects;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -23,12 +24,10 @@ import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 import se.skl.tp.vagval.logging.ThreadContextLogTrace;
 import se.skltp.takcache.BehorigheterCache;
-import se.skltp.takcache.TakCache;
 
-public class BehorighetDefaultRouteTest {
+class BehorighetDefaultRouteTest {
 
   private static final String OLD_STYLE_DEFAULT_ROUTING_DELIMITER = "#";
-
 
   HsaCache hsaCache;
 
@@ -37,21 +36,27 @@ public class BehorighetDefaultRouteTest {
 
   BehorighetHandlerImpl behorighetHandler;
   DefaultRoutingConfiguration defaultRoutingConfiguration;
+  AutoCloseable mocks;
 
 
-  @Before
-  public void beforeTest() {
-    MockitoAnnotations.openMocks(this);
+  @BeforeEach
+  void beforeTest() {
+    mocks = MockitoAnnotations.openMocks(this);
     hsaCache = new HsaCacheImpl();
-    URL url = getClass().getClassLoader().getResource("hsacache.xml");
-    URL urlHsaRoot = getClass().getClassLoader().getResource("hsacachecomplementary.xml");
+    URL url = Objects.requireNonNull(getClass().getClassLoader().getResource("hsacache.xml"));
+    URL urlHsaRoot = Objects.requireNonNull(getClass().getClassLoader().getResource("hsacachecomplementary.xml"));
     hsaCache.init(url.getFile(), urlHsaRoot.getFile());
     defaultRoutingConfiguration = new DefaultRoutingConfigurationImpl();
     defaultRoutingConfiguration.setDelimiter(OLD_STYLE_DEFAULT_ROUTING_DELIMITER);
   }
 
+  @AfterEach
+  void afterTest() throws Exception {
+    mocks.close();
+  }
+
   @Test
-  public void testSimpleAuthorizonByDefaultRoute() throws Exception {
+  void testSimpleAuthorizationByDefaultRoute() {
 
     Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_1)).thenReturn(false);
     Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
@@ -61,7 +66,7 @@ public class BehorighetDefaultRouteTest {
   }
 
   @Test
-  public void testDefaultRouteShouldOnlyAuthorizeOnCorrectSenderAndNamnrymd() throws Exception {
+  void testDefaultRouteShouldOnlyAuthorizeOnCorrectSenderAndNamnrymd() {
 
     Mockito.when(behorighetCache.isAuthorized(SENDER_2, NAMNRYMD_2, RECEIVER_1)).thenReturn(false);
     Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
@@ -71,7 +76,7 @@ public class BehorighetDefaultRouteTest {
   }
 
   @Test
-  public void testTraceLogAuthorizedByDefaultRouting() throws Exception {
+  void testTraceLogAuthorizedByDefaultRouting() {
 
     Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, RECEIVER_2)).thenReturn(false);
     Mockito.when(behorighetCache.isAuthorized(SENDER_1, NAMNRYMD_1, DEFAULT_RECEIVER)).thenReturn(true);
