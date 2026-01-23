@@ -86,30 +86,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-agent</id>
-            <phase>process-test-classes</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.mockito</groupId>
-                  <artifactId>mockito-core</artifactId>
-                  <version>${mockito.version}</version>
-                  <outputDirectory>${project.build.directory}/agents</outputDirectory>
-                  <destFileName>mockito-agent.jar</destFileName>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${surefire.plugin.version}</version>
         <executions>
@@ -121,14 +97,14 @@
           </execution>
         </executions>
         <configuration>
-          <argLine>@{argLine} -javaagent:${project.build.directory}/agents/mockito-agent.jar</argLine>
+          <argLine>@{argLine} -XX:+EnableDynamicAgentLoading</argLine>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.plugin.version}</version>
         <configuration>
-          <argLine>@{argLine} -javaagent:${project.build.directory}/agents/mockito-agent.jar</argLine>
+          <argLine>@{argLine} -XX:+EnableDynamicAgentLoading</argLine>
         </configuration>
       </plugin>
     </plugins>
