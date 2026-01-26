@@ -2,21 +2,25 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>se.skltp.takdatahandler</groupId>
   <artifactId>tak-data-handler</artifactId>
   <version>3.4.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+
   <modules>
     <module>vagvalhandler</module>
     <module>behorighethandler</module>
     <module>common</module>
     <module>report</module>
   </modules>
+
   <scm>
     <connection>scm:git:https://github.com/skltp/takdatahandler.git</connection>
     <developerConnection>scm:git:https://github.com/skltp/takdatahandler.git</developerConnection>
     <url>https://github.com/skltp/takdatahandler.git</url>
   </scm>
+
   <distributionManagement>
     <repository>
       <id>release-nexus</id>
@@ -29,18 +33,27 @@
       <url>${snapshot-nexus-url}</url>
     </snapshotRepository>
   </distributionManagement>
+
   <properties>
+    <!-- Project -->
     <maven.compiler.release>21</maven.compiler.release>
-    <takcache.version>2.2.0</takcache.version>
-    <jacoco.plugin.version>0.8.14</jacoco.plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <surefire.plugin.version>3.5.4</surefire.plugin.version>
+    <argLine/>
+
+    <!-- Plugins -->
+    <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+
+    <!-- Dependencies -->
+    <hsacache.version>1.3.0</hsacache.version>
+    <takcache.version>2.2.0</takcache.version>
+    <slf4j.version>2.0.17</slf4j.version>
+
+    <!-- Test dependencies -->
+    <jacoco.plugin.version>0.8.14</jacoco.plugin.version>
     <junit.jupiter.version>5.10.2</junit.jupiter.version>
     <mockito.version>5.21.0</mockito.version>
-    <hsacache.version>1.3.0</hsacache.version>
-    <slf4j.version>2.0.17</slf4j.version>
-    <argLine/>
   </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -74,6 +87,7 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <repositories>
     <repository>
       <snapshots>
@@ -83,11 +97,12 @@
       <url>https://nexus.drift.inera.se/repository/maven-public/</url>
     </repository>
   </repositories>
+
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${surefire.plugin.version}</version>
+        <version>${maven-surefire-plugin.version}</version>
         <executions>
           <execution>
             <goals>
@@ -102,13 +117,14 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire.plugin.version}</version>
+        <version>${maven-surefire-plugin.version}</version>
         <configuration>
           <argLine>@{argLine} -XX:+EnableDynamicAgentLoading</argLine>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
   <profiles>
     <profile>
       <id>test-coverage</id>
