@@ -1,6 +1,6 @@
 package se.skl.tp.vagval;
 
-import static se.skl.tp.hsa.cache.HsaCache.DEFAUL_ROOTNODE;
+import static se.skl.tp.hsa.cache.HsaCache.DEFAULT_ROOTNODE;
 
 import java.util.Collections;
 import java.util.List;
@@ -84,7 +84,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
 
   private List<RoutingInfo> getRoutingInfoByHsaLookup(String tjanstegranssnitt, String receiverAddress, LogTraceAppender logTrace) {
     logTrace.append("(parent)");
-    while (!DEFAUL_ROOTNODE.equals(receiverAddress)) {
+    while (!DEFAULT_ROOTNODE.equals(receiverAddress)) {
       receiverAddress = getHsaParent(receiverAddress);
       logTrace.append(receiverAddress);
       List<RoutingInfo> routingInfoList = getRoutingInfoFromTakCache(tjanstegranssnitt, receiverAddress);

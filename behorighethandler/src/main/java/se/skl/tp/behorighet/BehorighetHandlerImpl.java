@@ -1,6 +1,6 @@
 package se.skl.tp.behorighet;
 
-import static se.skl.tp.hsa.cache.HsaCache.DEFAUL_ROOTNODE;
+import static se.skl.tp.hsa.cache.HsaCache.DEFAULT_ROOTNODE;
 
 import java.util.List;
 import se.skl.tp.DefaultRoutingConfiguration;
@@ -109,7 +109,7 @@ public class BehorighetHandlerImpl implements BehorighetHandler {
   private boolean isAuthorizedUsingHsaLookup(String senderId, String servicecontractNamespace,
                                              String receiverId, LogTraceAppender logTrace) {
     logTrace.append("(parent)");
-    while (!DEFAUL_ROOTNODE.equals(receiverId)) {
+    while (!DEFAULT_ROOTNODE.equals(receiverId)) {
       receiverId = getHsaParent(receiverId);
       logTrace.append(receiverId);
       if (behorigheterCache.isAuthorized(senderId, servicecontractNamespace, receiverId)) {
