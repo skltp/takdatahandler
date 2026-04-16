@@ -1,69 +1,64 @@
 package se.skl.tp.vagval.util;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.stream.Stream;
 
-public class DefaultRoutingUtilTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class DefaultRoutingUtilTest {
 
   @Test
-  public void delimiterInAddressShouldGiveTrue() {
-    Assert.assertTrue( DefaultRoutingUtil.useOldStyleDefaultRouting("VG#VE", "#"));
+  void delimiterInAddressShouldGiveTrue() {
+    assertTrue( DefaultRoutingUtil.useOldStyleDefaultRouting("VG#VE", "#"));
   }
 
   @Test
-  public void emptyDelimiterShouldGiveFalse() {
-    Assert.assertFalse( DefaultRoutingUtil.useOldStyleDefaultRouting("VG#VE", ""));
+  void emptyDelimiterShouldGiveFalse() {
+    assertFalse( DefaultRoutingUtil.useOldStyleDefaultRouting("VG#VE", ""));
   }
 
   @Test
-  public void nullDelimiterShouldGiveFalse() {
-    Assert.assertFalse( DefaultRoutingUtil.useOldStyleDefaultRouting("VG#VE", null));
+  void nullDelimiterShouldGiveFalse() {
+    assertFalse( DefaultRoutingUtil.useOldStyleDefaultRouting("VG#VE", null));
   }
 
   @Test
-  public void nullReceiverShouldGiveFalse() {
-    Assert.assertFalse( DefaultRoutingUtil.useOldStyleDefaultRouting(null, "#"));
+  void nullReceiverShouldGiveFalse() {
+    assertFalse( DefaultRoutingUtil.useOldStyleDefaultRouting(null, "#"));
   }
 
   @Test
-  public void delimiterNotInAddressShouldGiveFalse() {
-    Assert.assertFalse( DefaultRoutingUtil.useOldStyleDefaultRouting("VG", "#"));
+  void delimiterNotInAddressShouldGiveFalse() {
+    assertFalse( DefaultRoutingUtil.useOldStyleDefaultRouting("VG", "#"));
   }
 
   @Test
-  public void extractReceiverAdressesShouldSplitInCorrectOrder() {
-    List<String> addresses = DefaultRoutingUtil.extractReceiverAdresses("VG#VE", "#");
-    Assert.assertEquals(2, addresses.size());
-    Assert.assertEquals("VE", addresses.get(0));
-    Assert.assertEquals("VG", addresses.get(1));
+  void extractReceiverAddressesShouldSplitInCorrectOrder() {
+    List<String> addresses = DefaultRoutingUtil.extractReceiverAddresses("VG#VE", "#");
+    assertEquals(2, addresses.size());
+    assertEquals("VE", addresses.get(0));
+    assertEquals("VG", addresses.get(1));
   }
 
-  @Test
-  public void missingVEShouldNotCauseCrash() {
-    List<String> addresses = DefaultRoutingUtil.extractReceiverAdresses("VG#", "#");
-    Assert.assertEquals(1, addresses.size());
-    Assert.assertEquals("VG", addresses.get(0));
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("provideEdgeCases")
+  void extractReceiverAddressesShouldHandleEdgeCases(String testName, String address, String expectedAddress) {
+    List<String> addresses = DefaultRoutingUtil.extractReceiverAddresses(address, "#");
+    assertEquals(1, addresses.size());
+    assertEquals(expectedAddress, addresses.getFirst());
   }
 
-  @Test
-  public void missingVGShouldNotCauseCrash() {
-    List<String> addresses = DefaultRoutingUtil.extractReceiverAdresses("#VE", "#");
-    Assert.assertEquals(1, addresses.size());
-    Assert.assertEquals("VE", addresses.get(0));
-  }
-
-  @Test
-  public void sameStringShouldNotBeAdddedTwiceToList() {
-    List<String> addresses = DefaultRoutingUtil.extractReceiverAdresses("VE#VE", "#");
-    Assert.assertEquals(1, addresses.size());
-    Assert.assertEquals("VE", addresses.get(0));
-  }
-
-  @Test
-  public void noDelimiterInAddresssShouldGiveOneInList() {
-    List<String> addresses = DefaultRoutingUtil.extractReceiverAdresses("12345", "#");
-    Assert.assertEquals(1, addresses.size());
-    Assert.assertEquals("12345", addresses.get(0));
+  private static Stream<Arguments> provideEdgeCases() {
+    return Stream.of(
+      Arguments.of("missingVEShouldNotCauseCrash", "VG#", "VG"),
+      Arguments.of("missingVGShouldNotCauseCrash", "#VE", "VE"),
+      Arguments.of("sameStringShouldNotBeAddedTwiceToList", "VE#VE", "VE"),
+      Arguments.of("noDelimiterInAddressShouldGiveOneInList", "12345", "12345")
+    );
   }
 }

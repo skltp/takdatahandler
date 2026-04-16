@@ -1,15 +1,16 @@
 package se.skl.tp.vagval.logging;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class LogTraceAppenderTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class LogTraceAppenderTest {
 
   @Test
-  public void testAppendFunctionality() {
+  void testAppendFunctionality() {
     LogTraceAppender logTraceAppender = new LogTraceAppender();
     logTraceAppender.append("add1", "add2");
-    Assert.assertEquals("add1,add2",logTraceAppender.toString());
+    assertEquals("add1,add2",logTraceAppender.toString());
   }
 
 

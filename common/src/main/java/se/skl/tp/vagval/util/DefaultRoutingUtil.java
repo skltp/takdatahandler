@@ -19,14 +19,14 @@ public class DefaultRoutingUtil {
     return false;
   }
 
-  public static List<String> extractReceiverAdresses(String recieverAddressesString, String addressDelimiter) {
+  public static List<String> extractReceiverAddresses(String recieverAddressesString, String addressDelimiter) {
     List<String> receiverAddresses = new ArrayList<>();
 
     StringTokenizer strToken = new StringTokenizer(recieverAddressesString, addressDelimiter);
     while (strToken.hasMoreTokens()) {
       String tempAddress = (String) strToken.nextElement();
       if (!receiverAddresses.contains(tempAddress)) {
-        receiverAddresses.add(0, tempAddress);
+        receiverAddresses.addFirst(tempAddress);
       }
     }
     return receiverAddresses;

@@ -1,53 +1,57 @@
 package se.skl.tp.vagval.util;
 
 import java.util.Arrays;
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
 import se.skl.tp.HsaLookupConfiguration;
 import se.skl.tp.HsaLookupConfigurationImpl;
 import se.skl.tp.hsa.cache.HsaCache;
 import se.skl.tp.hsa.cache.HsaCacheImpl;
 
-public class HsaLookupUtilTest {
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class HsaLookupUtilTest {
 
     HsaCache hsaCache = new HsaCacheImpl();
 
     @Test
-    public void hsaCacheNullShouldGiveFalse() {
-    Assert.assertFalse(
+    void hsaCacheNullShouldGiveFalse() {
+    assertFalse(
         HsaLookupUtil.isHsaLookupEnabled(null, new HsaLookupConfigurationImpl(), "a:b:c"));
     }
 
     @Test
-    public void defaultDisabledNoExceptionsShouldGiveFalse() {
+    void defaultDisabledNoExceptionsShouldGiveFalse() {
         HsaLookupConfiguration configuration = new HsaLookupConfigurationImpl();
         configuration.setDefaultEnabled(false);
-        Assert.assertFalse(
+        assertFalse(
                 HsaLookupUtil.isHsaLookupEnabled(hsaCache, configuration, "a:b:c"));
     }
 
     @Test
-    public void defaultDisabledWithMatchingExceptionShouldGiveTrue() {
+    void defaultDisabledWithMatchingExceptionShouldGiveTrue() {
         HsaLookupConfiguration configuration = new HsaLookupConfigurationImpl();
         configuration.setDefaultEnabled(false);
-        configuration.setExceptedNamespaces(Arrays.asList("a:b:c"));
-        Assert.assertTrue(
+        configuration.setExceptedNamespaces(List.of("a:b:c"));
+        assertTrue(
                 HsaLookupUtil.isHsaLookupEnabled(hsaCache, configuration, "a:b:c"));
     }
 
     @Test
-    public void defaultEnabledWithStartMatchingExceptionShouldGiveFalse() {
+    void defaultEnabledWithStartMatchingExceptionShouldGiveFalse() {
         HsaLookupConfiguration configuration = new HsaLookupConfigurationImpl();
         configuration.setExceptedNamespaces(Arrays.asList("x:y:z", "a:b"));
-        Assert.assertFalse(
+        assertFalse(
                 HsaLookupUtil.isHsaLookupEnabled(hsaCache, configuration, "a:b:c"));
     }
 
     @Test
-    public void defaultEnabledWithNoMatchingExceptionShouldGiveTrue() {
+    void defaultEnabledWithNoMatchingExceptionShouldGiveTrue() {
         HsaLookupConfiguration configuration = new HsaLookupConfigurationImpl();
         configuration.setExceptedNamespaces(Arrays.asList("", "a:b:c:d", null));
-        Assert.assertTrue(
+        assertTrue(
                 HsaLookupUtil.isHsaLookupEnabled(hsaCache, configuration, "a:b:c"));
     }
 }

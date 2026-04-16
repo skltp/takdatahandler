@@ -1,6 +1,6 @@
 package se.skl.tp.vagval;
 
-import static se.skl.tp.hsa.cache.HsaCache.DEFAUL_ROOTNODE;
+import static se.skl.tp.hsa.cache.HsaCache.DEFAULT_ROOTNODE;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,10 +20,10 @@ public class VagvalHandlerImpl implements VagvalHandler {
 
   public static final String DEFAULT_RECEIVER_ADDRESS = "*";
 
-  private HsaCache hsaCache;
-  private VagvalCache vagvalCache;
-  DefaultRoutingConfiguration defaultRoutingConfiguration;
-  HsaLookupConfiguration hsaLookupConfiguration;
+  private final HsaCache hsaCache;
+  private final VagvalCache vagvalCache;
+  private final DefaultRoutingConfiguration defaultRoutingConfiguration;
+  private final HsaLookupConfiguration hsaLookupConfiguration;
 
   public VagvalHandlerImpl(HsaCache hsaCache, VagvalCache vagvalCache, DefaultRoutingConfiguration defaultRoutingConfiguration,
                            HsaLookupConfiguration hsaLookupConfiguration) {
@@ -84,7 +84,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
 
   private List<RoutingInfo> getRoutingInfoByHsaLookup(String tjanstegranssnitt, String receiverAddress, LogTraceAppender logTrace) {
     logTrace.append("(parent)");
-    while (receiverAddress != DEFAUL_ROOTNODE) {
+    while (!DEFAULT_ROOTNODE.equals(receiverAddress)) {
       receiverAddress = getHsaParent(receiverAddress);
       logTrace.append(receiverAddress);
       List<RoutingInfo> routingInfoList = getRoutingInfoFromTakCache(tjanstegranssnitt, receiverAddress);
@@ -92,7 +92,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
         return routingInfoList;
       }
     }
-    return  Collections.<RoutingInfo>emptyList();
+    return  Collections.emptyList();
   }
 
   private String getHsaParent(String receiverId) {
@@ -102,7 +102,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
   private List<RoutingInfo> getRoutingInfoUseOldStyleDefaultRouting(String tjanstegranssnitt, String receiverAddress, LogTraceAppender logTrace) {
     logTrace.append("(leaf)");
 
-    List<String> receiverAddresses = DefaultRoutingUtil.extractReceiverAdresses(receiverAddress,
+    List<String> receiverAddresses = DefaultRoutingUtil.extractReceiverAddresses(receiverAddress,
         defaultRoutingConfiguration.getDelimiter());
 
     for(String receiverAddressTmp : receiverAddresses){
@@ -113,7 +113,7 @@ public class VagvalHandlerImpl implements VagvalHandler {
       }
     }
 
-    return Collections.<RoutingInfo>emptyList();
+    return Collections.emptyList();
   }
 
   private List<RoutingInfo> getRoutingInfoFromTakCache(String tjanstegranssnitt, String receiverAddress) {
