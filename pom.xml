@@ -40,18 +40,20 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <argLine/>
 
+    <!-- TODO: REGULARLY CHECK CURRENTNESS OF DEPS -#- DEPENDENCY CURRENTNESS LAST CHECKED: APR 2026. -->
+
     <!-- Plugins -->
-    <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version> <!-- FEB 2026 -->
 
     <!-- Dependencies -->
-    <hsacache.version>1.4.0</hsacache.version>
-    <takcache.version>3.0.0</takcache.version>
+    <hsacache.version>1.4.1</hsacache.version> <!-- APR 2026 -->
+    <takcache.version>3.0.1</takcache.version> <!-- APR 2026 -->
 
     <!-- Test dependencies -->
     <log4j.version>2.25.4</log4j.version>
-    <jacoco.plugin.version>0.8.14</jacoco.plugin.version>
-    <junit.jupiter.version>5.10.2</junit.jupiter.version>
-    <mockito.version>5.21.0</mockito.version>
+    <jacoco.plugin.version>0.8.14</jacoco.plugin.version> <!-- OCT 2025. Latest as of APR 2026. -->
+    <junit.jupiter.version>5.14.3</junit.jupiter.version> <!-- FEB 2026 -->
+    <mockito.version>5.23.0</mockito.version> <!-- MAR 2026 -->
   </properties>
 
   <dependencyManagement>
@@ -91,18 +93,21 @@
   </dependencyManagement>
 
   <dependencies>
+    <!-- Log4j 2 implementation - ThreadContext is used directly by a Routing debugger. -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+    </dependency>
+
+    <!-- Everything below is only pulled in during the test scope, to run tests,
+         and are not included with the library artifacts -->
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
 
-    <!-- Log4j 2 implementation -->
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <scope>test</scope>
-    </dependency>
     <!-- Bridge SLF4J calls into Log4j 2 -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
