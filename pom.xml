@@ -5,7 +5,7 @@
 
   <groupId>se.skltp.takdatahandler</groupId>
   <artifactId>tak-data-handler</artifactId>
-  <version>3.4.1</version>
+  <version>3.4.2</version>
   <packaging>pom</packaging>
 
   <modules>
