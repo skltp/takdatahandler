@@ -26,7 +26,7 @@ public class DefaultRoutingUtil {
     while (strToken.hasMoreTokens()) {
       String tempAddress = (String) strToken.nextElement();
       if (!receiverAddresses.contains(tempAddress)) {
-        receiverAddresses.addFirst(tempAddress);
+        receiverAddresses.add(0, tempAddress);
       }
     }
     return receiverAddresses;

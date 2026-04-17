@@ -70,13 +70,13 @@ class OldStyleDefaultRoutingTest {
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, RECEIVER_1_DEFAULT_RECEIVER_2);
     assertEquals(1, routingInfoList.size());
-    assertEquals(ADDRESS_2, routingInfoList.getFirst().getAddress());
-    assertEquals(RIV21, routingInfoList.getFirst().getRivProfile());
+    assertEquals(ADDRESS_2, routingInfoList.get(0).getAddress());
+    assertEquals(RIV21, routingInfoList.get(0).getRivProfile());
 
     routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_2_DEFAULT_RECEIVER_3);
     assertEquals(1, routingInfoList.size());
-    assertEquals(ADDRESS_2, routingInfoList.getFirst().getAddress());
-    assertEquals(RIV21, routingInfoList.getFirst().getRivProfile());
+    assertEquals(ADDRESS_2, routingInfoList.get(0).getAddress());
+    assertEquals(RIV21, routingInfoList.get(0).getRivProfile());
 
     routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_3_DEFAULT_RECEIVER_4);
     assertTrue(routingInfoList.isEmpty());

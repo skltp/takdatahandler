@@ -65,8 +65,8 @@ class VagvalHandlerTest {
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertEquals(1, routingInfoList.size());
-    assertEquals(ADDRESS_1, routingInfoList.getFirst().getAddress());
-    assertEquals(RIV20, routingInfoList.getFirst().getRivProfile());
+    assertEquals(ADDRESS_1, routingInfoList.get(0).getAddress());
+    assertEquals(RIV20, routingInfoList.get(0).getRivProfile());
   }
 
   @Test
@@ -79,8 +79,8 @@ class VagvalHandlerTest {
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertEquals(1, routingInfoList.size());
-    assertEquals(ADDRESS_1, routingInfoList.getFirst().getAddress());
-    assertEquals(RIV20, routingInfoList.getFirst().getRivProfile());
+    assertEquals(ADDRESS_1, routingInfoList.get(0).getAddress());
+    assertEquals(RIV20, routingInfoList.get(0).getRivProfile());
   }
 
   @Test
@@ -151,8 +151,8 @@ class VagvalHandlerTest {
 
     List<RoutingInfo> routingInfoList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_1);
     assertEquals(1, routingInfoList.size());
-    assertEquals(ADDRESS_1, routingInfoList.getFirst().getAddress());
-    assertEquals(RIV20, routingInfoList.getFirst().getRivProfile());
+    assertEquals(ADDRESS_1, routingInfoList.get(0).getAddress());
+    assertEquals(RIV20, routingInfoList.get(0).getRivProfile());
     List<RoutingInfo> emptyList = vagvalHandler.getRoutingInfo(NAMNRYMD_1, RECEIVER_2);
     assertTrue(emptyList.isEmpty());
   }

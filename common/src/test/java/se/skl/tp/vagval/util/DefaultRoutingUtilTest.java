@@ -50,7 +50,7 @@ class DefaultRoutingUtilTest {
   void extractReceiverAddressesShouldHandleEdgeCases(String testName, String address, String expectedAddress) {
     List<String> addresses = DefaultRoutingUtil.extractReceiverAddresses(address, "#");
     assertEquals(1, addresses.size());
-    assertEquals(expectedAddress, addresses.getFirst());
+    assertEquals(expectedAddress, addresses.get(0));
   }
 
   private static Stream<Arguments> provideEdgeCases() {

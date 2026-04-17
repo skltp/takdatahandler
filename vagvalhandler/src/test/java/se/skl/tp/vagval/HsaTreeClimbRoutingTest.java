@@ -80,8 +80,8 @@ class HsaTreeClimbRoutingTest {
     List<RoutingInfo> routingInfoList = vagvalHandler
         .getRoutingInfo(NAMNRYMD_1, CHILD_OF_AUTHORIZED_RECEIVER_IN_HSA_TREE);
     assertEquals(1, routingInfoList.size());
-    assertEquals(ADDRESS_2, routingInfoList.getFirst().getAddress());
-    assertEquals(RIV21, routingInfoList.getFirst().getRivProfile());
+    assertEquals(ADDRESS_2, routingInfoList.get(0).getAddress());
+    assertEquals(RIV21, routingInfoList.get(0).getRivProfile());
   }
 
   @Test
