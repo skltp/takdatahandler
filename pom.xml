@@ -36,7 +36,7 @@
 
   <properties>
     <!-- Project -->
-    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <argLine/>
 
@@ -46,8 +46,8 @@
     <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version> <!-- FEB 2026 -->
 
     <!-- Dependencies -->
-    <hsacache.version>1.4.1</hsacache.version> <!-- APR 2026 -->
-    <takcache.version>3.0.1</takcache.version> <!-- APR 2026 -->
+    <hsacache.version>1.4.2</hsacache.version> <!-- APR 2026 -->
+    <takcache.version>3.0.2</takcache.version> <!-- APR 2026 -->
 
     <!-- Test dependencies -->
     <log4j.version>2.25.4</log4j.version>
