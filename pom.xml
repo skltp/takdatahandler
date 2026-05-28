@@ -47,7 +47,7 @@
 
     <!-- Dependencies -->
     <hsacache.version>1.4.2</hsacache.version> <!-- APR 2026 -->
-    <takcache.version>3.0.3</takcache.version> <!-- MAY 2026 -->
+    <takcache.version>3.0.5</takcache.version> <!-- MAY 2026 -->
 
     <!-- Test dependencies -->
     <log4j.version>2.25.4</log4j.version>
